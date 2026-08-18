@@ -56,6 +56,30 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 .v51-detail{margin-top:14px;background:#f7f7f7;border:1px solid #e5e5e5;border-radius:14px;padding:14px}.v51-detail h3{margin:0 0 10px;font-size:16px}.v51-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.v51-detail-grid>div{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:10px}.v51-detail strong{display:block;margin-top:4px;font-size:17px}
 @media(max-width:620px){.v51-top-actions{gap:4px}.v51-top-btn{padding:8px 8px!important;font-size:10px!important}.v51-summary{gap:5px}.v51-summary>div{padding:9px}.v51-summary strong{font-size:17px}.v51-day{min-height:66px;padding:5px!important}.v51-detail-grid{grid-template-columns:1fr}}
 
+
+/* Drawing Labs V5.2 — title visual refinement only.
+   No JavaScript, DOM structure, camera, timer, model-loader or lens code changes. */
+header h1{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  font-size:clamp(36px,4.8vw,58px);
+  font-weight:700;
+  line-height:1.02;
+  letter-spacing:.055em;
+  white-space:nowrap;
+}
+@media(max-width:700px){
+  header h1{
+    font-size:clamp(31px,7.2vw,43px);
+    letter-spacing:.045em;
+  }
+}
+@media(max-width:430px){
+  header h1{
+    font-size:clamp(28px,7vw,36px);
+    letter-spacing:.035em;
+  }
+}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
