@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#f3f4f6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Pose Trainer" />
+  <title>Pose Sketch Trainer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>POSE SKETCH TRAINER</h1>
+      <p>3Dデッサン練習・タイマー・練習記録</p>
+    </div>
+    <button id="openStatsBtn" class="secondary">記録を見る</button>
+  </header>
+
+  <div class="mobile-session-bar">
+    <div><span>TIME</span><strong id="mobileTimer">05:00</strong></div>
+    <div><span>TODAY</span><strong id="mobileToday">0枚</strong></div>
+    <button id="mobileStartBtn">開始</button>
+  </div>
+
+  <main class="app-grid">
+    <section class="viewer-panel card">
+      <div class="viewer-header">
+        <div>
+          <span class="eyebrow">CURRENT SESSION</span>
+          <h2 id="poseName">Standing Twist</h2>
+        </div>
+        <div class="badge" id="cameraBadge">斜め俯瞰</div>
+      </div>
+
+      <div id="viewer" class="viewer">
+        <canvas id="poseCanvas" width="900" height="620"></canvas>
+        <div id="pauseOverlay" class="pause-overlay hidden">PAUSED</div>
+      </div>
+
+      <div class="viewer-controls">
+        <button id="prevBtn" class="secondary">← 前へ</button>
+        <button id="randomBtn">ランダム</button>
+        <button id="nextBtn" class="secondary">次へ →</button>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="card timer-card">
+        <span class="eyebrow">TIMER</span>
+        <div id="timerDisplay" class="timer-display">05:00</div>
+
+        <div class="timer-presets">
+          <button data-minutes="0.5" class="preset secondary">30秒</button>
+          <button data-minutes="1" class="preset secondary">1分</button>
+          <button data-minutes="2" class="preset secondary">2分</button>
+          <button data-minutes="5" class="preset active">5分</button>
+          <button data-minutes="10" class="preset secondary">10分</button>
+        </div>
+
+        <div class="timer-actions">
+          <button id="startPauseBtn">開始</button>
+          <button id="resetBtn" class="secondary">リセット</button>
+        </div>
+
+        <label class="toggle-row">
+          <input type="checkbox" id="autoNext" checked />
+          <span>終了時に自動で次のポーズへ</span>
+        </label>
+        <label class="toggle-row">
+          <input type="checkbox" id="countOnComplete" checked />
+          <span>完了したポーズを1枚として記録</span>
+        </label>
+      </section>
+
+      <section class="card session-card">
+        <span class="eyebrow">TODAY</span>
+        <div class="session-stats">
+          <div><strong id="todayCount">0</strong><span>枚</span></div>
+          <div><strong id="todayMinutes">0</strong><span>分</span></div>
+        </div>
+        <button id="manualAddBtn" class="secondary wide">+ 1枚 手動追加</button>
+      </section>
+
+      <section class="card option-card">
+        <span class="eyebrow">VIEW</span>
+        <div class="select-grid">
+          <label>難易度
+            <select id="difficulty">
+              <option value="easy">Easy</option>
+              <option value="normal" selected>Normal</option>
+              <option value="hard">Hard</option>
+            </select>
+          </label>
+          <label>表示
+            <select id="renderMode">
+              <option value="body" selected>素体</option>
+              <option value="silhouette">シルエット</option>
+              <option value="wire">骨格風</option>
+            </select>
+          </label>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <dialog id="statsDialog">
+    <div class="dialog-head">
+      <div>
+        <span class="eyebrow">TRAINING LOG</span>
+        <h2>デッサン記録</h2>
+      </div>
+      <button id="closeStatsBtn" class="secondary">閉じる</button>
+    </div>
+
+    <div class="stats-summary">
+      <div class="summary-box"><span>今月</span><strong id="monthDays">0日</strong><small>練習日数</small></div>
+      <div class="summary-box"><span>今月</span><strong id="monthCount">0枚</strong><small>総デッサン</small></div>
+      <div class="summary-box"><span>連続</span><strong id="streak">0日</strong><small>現在</small></div>
+      <div class="summary-box"><span>最長</span><strong id="bestStreak">0日</strong><small>連続記録</small></div>
+    </div>
+
+    <div class="stats-tabs">
+      <button id="monthTab" class="tab active">月間</button>
+      <button id="yearTab" class="tab secondary">年間</button>
+    </div>
+
+    <section id="monthView">
+      <div class="calendar-nav">
+        <button id="prevMonth" class="secondary">←</button>
+        <h3 id="calendarTitle"></h3>
+        <button id="nextMonth" class="secondary">→</button>
+      </div>
+      <div class="weekdays">
+        <span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span>
+      </div>
+      <div id="monthCalendar" class="month-calendar"></div>
+    </section>
+
+    <section id="yearView" class="hidden">
+      <div class="calendar-nav">
+        <button id="prevYear" class="secondary">←</button>
+        <h3 id="yearTitle"></h3>
+        <button id="nextYear" class="secondary">→</button>
+      </div>
+      <div id="yearGrid" class="year-grid"></div>
+      <p class="legend"><span class="legend-box blank"></span>未練習　<span class="legend-box done"></span>練習済み</p>
+    </section>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
