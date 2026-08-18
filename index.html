@@ -29,12 +29,12 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
 <body>
-<header><div><h1>POSE SKETCH TRAINER</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
+<header><div><h1>POSE SKETCH TRAINER V4.1</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
 <div class="mobile"><div><span>TIME</span><strong id="mt">05:00</strong></div><div><span>TODAY</span><strong id="md">0枚</strong></div><button id="ms">開始</button></div>
 <main class="layout">
 <section class="card viewer">
  <div class="head"><div><span class="ey">DRAWING POSE</span><h2 id="poseName">3D Mannequin</h2></div><span class="badge" id="cam">35mm / 斜め</span></div>
- <div id="stage"><div class="hud"><span>1本指: 回転</span><span>2本指: ズーム/移動</span><span id="poseInfo">内蔵ポーズ</span></div></div>
+ <div id="stage"><div class="hud"><span>1本指: 回転</span><span>2本指: ズーム/移動</span><span id="poseInfo">内蔵ポーズ</span><span id="distanceInfo">CAM DIST</span></div></div>
  <div class="actions"><button id="front" class="dark">正面</button><button id="random">ランダム</button><button id="resetCam" class="dark">戻す</button></div>
 </section>
 <aside class="side">
@@ -51,7 +51,7 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 <option value="300">超望遠 300mm</option>
 <option value="fisheye">魚眼レンズ</option>
 </select></label><label>ライト<select id="lighting"><option value="soft">Soft Studio</option><option value="hard">Hard Shadow</option><option value="flat">Flat</option></select></label><label><input id="grid" type="checkbox" checked> 床グリッド</label></div></section>
-<section class="card"><span class="ey">3D MODEL IMPORT</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
+<section class="card"><span class="ey">3D MODEL IMPORT / CAMERA FIX</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
 </aside></main>
 <dialog id="dlg"><div class="dh"><h2 style="margin:0">デッサン記録</h2><button id="close" class="dark">閉じる</button></div>
 <div class="summary"><div class="stat"><span>今月の練習日</span><strong id="mDays">0日</strong></div><div class="stat"><span>今月の枚数</span><strong id="mCount">0枚</strong></div><div class="stat"><span>現在の連続</span><strong id="streak">0日</strong></div><div class="stat"><span>最長連続</span><strong id="best">0日</strong></div></div>
@@ -71,7 +71,7 @@ import {ShaderPass} from "three/addons/postprocessing/ShaderPass.js";
 const $=x=>document.getElementById(x),stage=$("stage");
 const ren=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:"high-performance"});ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.outputColorSpace=THREE.SRGBColorSpace;stage.prepend(ren.domElement);
 const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.01,100);cam.position.set(4,2.6,6);cam.setFocalLength(80);
-const ctl=new OrbitControls(cam,ren.domElement);ctl.enableDamping=true;ctl.target.set(0,1.4,0);ctl.minDistance=2;ctl.maxDistance=12;ctl.maxPolarAngle=Math.PI*.95;
+const ctl=new OrbitControls(cam,ren.domElement);ctl.enableDamping=true;ctl.target.set(0,1.4,0);ctl.minDistance=.8;ctl.maxDistance=160;ctl.maxPolarAngle=Math.PI*.95;
 const hemi=new THREE.HemisphereLight(0xffffff,0x26313d,1.5),key=new THREE.DirectionalLight(0xffffff,3.2),rim=new THREE.DirectionalLight(0xc8dcff,1);key.position.set(4,7,5);rim.position.set(-4,3,-4);key.castShadow=true;scene.add(hemi,key,rim);
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshStandardMaterial({color:0x181b21,roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);const grid=new THREE.GridHelper(20,40,0x5b6675,0x323844);grid.position.y=.003;scene.add(grid);
 const fisheyeShader={uniforms:{tDiffuse:{value:null},strength:{value:0},aspect:{value:1}},vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,fragmentShader:`uniform sampler2D tDiffuse;uniform float strength;uniform float aspect;varying vec2 vUv;void main(){vec2 p=vUv-0.5;p.x*=aspect;float r2=dot(p,p);vec2 q=p*(1.0+strength*r2);q.x/=aspect;vec2 uv=q+0.5;if(uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0){gl_FragColor=vec4(0.02,0.02,0.025,1.0);}else{gl_FragColor=texture2D(tDiffuse,uv);}}`};
@@ -102,7 +102,54 @@ function applyLens(value,doFrame=true){
   }
   if(doFrame)frameSubject();
 }
-function frameSubject(direction=null){const b=activeBounds();ctl.target.copy(b.center);const vfov=THREE.MathUtils.degToRad(cam.fov);let dist=b.radius/Math.sin(Math.max(.02,vfov/2))*1.18;if($("lens").value==="fisheye")dist=Math.max(b.radius*1.35,1.5);let dir=direction||cam.position.clone().sub(ctl.target).normalize();if(!Number.isFinite(dir.lengthSq())||dir.lengthSq()<.1)dir=new THREE.Vector3(.6,.25,1).normalize();cam.position.copy(b.center).add(dir.multiplyScalar(dist));cam.near=Math.max(.01,dist-b.radius*2.2);cam.far=Math.max(100,dist+b.radius*8);cam.updateProjectionMatrix();ctl.update()}
+function frameSubject(direction=null){
+  const b=activeBounds();
+  ctl.target.copy(b.center);
+
+  const lens=$("lens").value;
+  const vfov=THREE.MathUtils.degToRad(cam.fov);
+
+  // Base distance needed to fit the full bounding sphere.
+  let dist=b.radius/Math.sin(Math.max(.006,vfov/2))*1.30;
+
+  // Lens-specific working-distance multipliers.
+  // Telephoto lenses need substantially more physical camera distance.
+  const lensDistance={
+    "24":1.10,
+    "80":1.45,
+    "120":1.85,
+    "300":3.20,
+    "fisheye":0.92
+  };
+
+  dist*=lensDistance[lens]||1;
+
+  if(lens==="fisheye"){
+    dist=Math.max(b.radius*1.45,1.8);
+  }
+
+  // OrbitControls must allow the calculated distance instead of clamping
+  // telephoto cameras back toward the model.
+  ctl.minDistance=Math.max(.45,b.radius*.28);
+  ctl.maxDistance=Math.max(40,dist*2.2);
+
+  let dir=direction||cam.position.clone().sub(ctl.target).normalize();
+  if(!Number.isFinite(dir.lengthSq())||dir.lengthSq()<.1){
+    dir=new THREE.Vector3(.6,.25,1).normalize();
+  }
+
+  cam.position.copy(b.center).add(dir.multiplyScalar(dist));
+
+  // Keep the near clipping plane well in front of the camera,
+  // never inside the subject. This prevents the "sliced body" effect.
+  const nearestSurface=Math.max(.05,dist-b.radius*1.35);
+  cam.near=Math.max(.02,Math.min(nearestSurface*.22,b.radius*.18));
+  cam.far=Math.max(250,dist+b.radius*12);
+
+  cam.updateProjectionMatrix();
+  ctl.update();
+  const di=$("distanceInfo");if(di)di.textContent=`距離 ${dist.toFixed(1)}`;
+}
 function randomCam(){let lens=["24","80","120","300","fisheye"][Math.floor(Math.random()*5)];$("lens").value=lens;applyLens(lens,false);let az=Math.random()*Math.PI*2,el=THREE.MathUtils.degToRad(THREE.MathUtils.randFloat(-18,62));let dir=new THREE.Vector3(Math.cos(el)*Math.cos(az),Math.sin(el),Math.cos(el)*Math.sin(az)).normalize();frameSubject(dir);$("cam").textContent=`${lens==="fisheye"?"魚眼":lens+"mm"} / ${el>.48?"俯瞰":el<-.08?"アオリ":"斜め"}`}
 function randomPose(){if(!importedPose())drawMannequin();randomCam()}
 $("random").onclick=randomPose;$("front").onclick=()=>{applyLens($("lens").value,false);frameSubject(new THREE.Vector3(0,.04,1));$("cam").textContent=`${$("lens").value==="fisheye"?"魚眼":$("lens").value+"mm"} / 正面`};$("resetCam").onclick=()=>{applyLens($("lens").value,false);frameSubject(new THREE.Vector3(.55,.25,.8).normalize())};
