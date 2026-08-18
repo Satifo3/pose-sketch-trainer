@@ -29,7 +29,7 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
 <body>
-<header><div><h1>POSE SKETCH TRAINER V4.2</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
+<header><div><h1>POSE SKETCH TRAINER V4.3</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
 <div class="mobile"><div><span>TIME</span><strong id="mt">05:00</strong></div><div><span>TODAY</span><strong id="md">0枚</strong></div><button id="ms">開始</button></div>
 <main class="layout">
 <section class="card viewer">
@@ -51,7 +51,7 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 <option value="300">超望遠 300mm</option>
 <option value="fisheye">魚眼レンズ</option>
 </select></label><label>モデル表示サイズ<select id="subjectFill"><option value="0.70">70%</option><option value="0.78" selected>78%</option><option value="0.85">85%</option></select></label><label>ライト<select id="lighting"><option value="soft">Soft Studio</option><option value="hard">Hard Shadow</option><option value="flat">Flat</option></select></label><label><input id="grid" type="checkbox" checked> 床グリッド</label></div></section>
-<section class="card"><span class="ey">3D MODEL IMPORT / AUTO FRAMING</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
+<section class="card"><span class="ey">3D MODEL IMPORT / FISHEYE CLOSEUP</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
 </aside></main>
 <dialog id="dlg"><div class="dh"><h2 style="margin:0">デッサン記録</h2><button id="close" class="dark">閉じる</button></div>
 <div class="summary"><div class="stat"><span>今月の練習日</span><strong id="mDays">0日</strong></div><div class="stat"><span>今月の枚数</span><strong id="mCount">0枚</strong></div><div class="stat"><span>現在の連続</span><strong id="streak">0日</strong></div><div class="stat"><span>最長連続</span><strong id="best">0日</strong></div></div>
@@ -112,7 +112,7 @@ function frameSubject(direction=null){
   // Target: subject occupies roughly 78% of the preview height.
   // Using the bounding sphere keeps hands/feet inside the frame even on dynamic poses.
   const userFill = parseFloat($("subjectFill")?.value || "0.78");
-  const targetFill = lens==="fisheye" ? Math.max(.62,userFill-.06) : userFill;
+  const targetFill = lens==="fisheye" ? Math.max(.88,Math.min(.92,userFill+.12)) : userFill;
   const halfDesiredAngle = Math.max(0.004, (vfov * targetFill) / 2);
 
   // Distance required for the bounding sphere to fill targetFill of screen height.
@@ -125,13 +125,14 @@ function frameSubject(direction=null){
     "80": 1.02,
     "120": 1.015,
     "300": 1.01,
-    "fisheye": 1.08
+    "fisheye": 0.86
   };
   dist *= compositionScale[lens] || 1;
 
   if(lens==="fisheye"){
-    // Fisheye distortion visually enlarges edges, so leave a little more breathing room.
-    dist=Math.max(dist,b.radius*1.65);
+    // Deliberately move closer for anime-style fisheye impact.
+    // The subject should dominate the frame while still leaving a small safety margin.
+    dist=Math.max(b.radius*1.05,dist*.72);
   }
 
   ctl.minDistance=Math.max(.45,b.radius*.28);
