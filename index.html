@@ -32,13 +32,81 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 .lens-choice.wide{grid-column:1/-1}
 .lens-note{font-size:9px;color:var(--mut);line-height:1.45;margin-top:6px}
 
+
+.header-action{white-space:nowrap;min-width:0}
+.calendar-page{
+  min-height:100dvh;
+  background:#fff;
+  color:#111;
+  padding:calc(18px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));
+}
+.cal-page-shell{max-width:980px;margin:0 auto}
+.cal-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+.cal-back{
+  background:#111!important;color:#fff!important;border-color:#111!important;
+  min-height:46px;border-radius:999px;padding:10px 18px;
+}
+.cal-title-wrap h2{margin:0;font-size:32px;letter-spacing:-.02em}
+.cal-title-wrap p{margin:3px 0 0;color:#777;font-size:12px}
+.cal-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 22px}
+.cal-summary-box{background:#f5f5f5;border:1px solid #e3e3e3;border-radius:14px;padding:14px}
+.cal-summary-box span{display:block;font-size:10px;color:#777;font-weight:800;letter-spacing:.08em}
+.cal-summary-box strong{display:block;margin-top:4px;font-size:24px}
+.cal-month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-month-nav button{background:#f3f3f3;color:#111;border:1px solid #ddd}
+.cal-month-nav h3{font-size:28px;margin:0}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+.cal-week span{text-align:center;color:#777;font-size:11px;font-weight:800;padding:7px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-cell{
+  min-height:104px;background:#fff;border:1px solid #e3e3e3;border-radius:12px;
+  padding:9px;position:relative;cursor:pointer;color:#111;
+}
+.cal-cell:hover{border-color:#bbb}
+.cal-cell.empty{opacity:0;pointer-events:none}
+.cal-cell.trained{background:#ffd84d;border-color:#e7bd21}
+.cal-cell.today{outline:3px solid #ff4b4b;outline-offset:-3px}
+.cal-daynum{font-size:14px;font-weight:900}
+.cal-badge{position:absolute;left:8px;bottom:8px;font-size:10px;font-weight:800;color:#5f4a00}
+.cal-detail{
+  margin-top:16px;background:#fafafa;border:1px solid #e5e5e5;border-radius:14px;padding:16px;
+}
+.cal-detail h4{margin:0 0 12px;font-size:18px}
+.cal-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cal-detail-item{background:#fff;border:1px solid #e5e5e5;border-radius:11px;padding:12px}
+.cal-detail-item span{display:block;color:#777;font-size:10px;font-weight:800}
+.cal-detail-item strong{display:block;margin-top:5px;font-size:20px}
+@media(max-width:700px){
+  header .header-action{font-size:11px;padding:8px 10px;min-height:40px}
+  .calendar-page{padding-left:10px;padding-right:10px}
+  .cal-topbar{align-items:flex-start}
+  .cal-title-wrap h2{font-size:25px}
+  .cal-summary-grid{grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .cal-summary-box{padding:10px}
+  .cal-summary-box strong{font-size:18px}
+  .cal-grid,.cal-week{gap:4px}
+  .cal-cell{min-height:76px;padding:6px;border-radius:9px}
+  .cal-daynum{font-size:12px}
+  .cal-badge{font-size:8px;left:5px;bottom:5px}
+  .cal-detail-grid{grid-template-columns:1fr}
+}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
 <body>
-<header><div><h1>Drawing Labs</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
+<header>
+  <div>
+    <h1>Drawing Labs</h1>
+    <div class="sub">3D FIGURE DRAWING / ANIME CAMERA TRAINING</div>
+  </div>
+  <div style="display:flex;gap:6px;align-items:center">
+    <button id="modelNavBtn" class="dark header-action">モデル設定</button>
+    <button id="statsBtn" class="dark header-action">記録</button>
+  </div>
+</header>
 <div class="mobile"><div><span>TIME</span><strong id="mt">05:00</strong></div><div><span>TODAY</span><strong id="md">0枚</strong></div><button id="ms">開始</button></div>
-<main class="layout">
+<div id="mainPage"><main class="layout">
 <section class="card viewer">
  <div class="head"><div><span class="ey">DRAWING POSE</span><h2 id="poseName">3D Mannequin</h2></div><span class="badge" id="cam">35mm / 斜め</span></div>
  <div id="stage"><div class="hud"><span>1本指: 回転</span><span>2本指: ズーム/移動</span><span id="poseInfo">内蔵ポーズ</span><span id="distanceInfo">CAM DIST</span></div></div>
@@ -118,8 +186,9 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
     <label><input id="grid" type="checkbox" checked> 床グリッド</label>
   </div>
 </section>
-<section class="card"><span class="ey">3D MODEL IMPORT / LENS FILTER</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
-</aside></main>
+<section class="card" id="modelImportSection"><span class="ey">3D MODEL IMPORT / LENS FILTER</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
+</aside></main></div>
+<div id="calendarPage" class="calendar-page hidden"></div>
 <dialog id="dlg"><div class="dh"><h2 style="margin:0">デッサン記録</h2><button id="close" class="dark">閉じる</button></div>
 <div class="summary"><div class="stat"><span>今月の練習日</span><strong id="mDays">0日</strong></div><div class="stat"><span>今月の枚数</span><strong id="mCount">0枚</strong></div><div class="stat"><span>現在の連続</span><strong id="streak">0日</strong></div><div class="stat"><span>最長連続</span><strong id="best">0日</strong></div></div>
 <div class="tabs"><button id="monthTab">月間</button><button id="yearTab" class="dark">年間</button></div>
@@ -730,7 +799,7 @@ document.addEventListener("visibilitychange",()=>{
 let cd=new Date(),yr=cd.getFullYear();function mi(y,m){let f=new Date(y,m,1),l=new Date(y,m+1,0);return{d:l.getDate(),o:(f.getDay()+6)%7}}function renderMonth(){let y=cd.getFullYear(),m=cd.getMonth(),l=loadLog(),r=$("month");r.innerHTML="";$("mTitle").textContent=`${y}年 ${m+1}月`;let I=mi(y,m);for(let i=0;i<I.o;i++){let x=document.createElement("div");x.className="day empty";r.append(x)}for(let d=1;d<=I.d;d++){let it=l[dk(new Date(y,m,d))],x=document.createElement("div");x.className="day"+(it?.count?" done":"");x.innerHTML=`<span class=dn>${d}</span>${it?.count?`<span class=dc>${it.count}枚</span>`:""}`;r.append(x)}}function renderYear(){let r=$("year"),l=loadLog();r.innerHTML="";$("yTitle").textContent=`${yr}年`;for(let m=0;m<12;m++){let w=document.createElement("div");w.className="ym";w.innerHTML=`<h4>${m+1}月</h4>`;let g=document.createElement("div");g.className="mini",I=mi(yr,m);for(let i=0;i<I.o;i++){let x=document.createElement("div");x.className="md empty";g.append(x)}for(let d=1;d<=I.d;d++){let it=l[dk(new Date(yr,m,d))],x=document.createElement("div");x.className="md"+(it?.count?" done":"");g.append(x)}w.append(g);r.append(w)}}
 function streak(){let l=loadLog(),ks=Object.keys(l).filter(k=>l[k].count).sort();if(!ks.length)return[0,0];let best=0,run=0,pr=null;for(let k of ks){let d=new Date(k+"T00:00:00");run=pr&&Math.round((d-pr)/864e5)==1?run+1:1;best=Math.max(best,run);pr=d}let s=new Set(ks),d=new Date(),cur=0;if(!s.has(dk(d)))d.setDate(d.getDate()-1);while(s.has(dk(d))){cur++;d.setDate(d.getDate()-1)}return[cur,best]}
 function summary(){let l=loadLog(),n=new Date(),days=0,c=0;for(let[k,v]of Object.entries(l)){let d=new Date(k+"T00:00:00");if(d.getFullYear()==n.getFullYear()&&d.getMonth()==n.getMonth()&&v.count){days++;c+=v.count}}let s=streak();$("mDays").textContent=days+"日";$("mCount").textContent=c+"枚";$("streak").textContent=s[0]+"日";$("best").textContent=s[1]+"日"}function renderStats(){renderMonth();renderYear();summary()}
-$("statsBtn").onclick=()=>{renderStats();$("dlg").showModal()};$("close").onclick=()=>$("dlg").close();$("monthTab").onclick=()=>{$("monthView").classList.remove("hidden");$("yearView").classList.add("hidden")};$("yearTab").onclick=()=>{$("yearView").classList.remove("hidden");$("monthView").classList.add("hidden")};$("pm").onclick=()=>{cd.setMonth(cd.getMonth()-1);renderMonth()};$("nm").onclick=()=>{cd.setMonth(cd.getMonth()+1);renderMonth()};$("py").onclick=()=>{yr--;renderYear()};$("ny").onclick=()=>{yr++;renderYear()};
+$("monthTab").onclick=()=>{$("monthView").classList.remove("hidden");$("yearView").classList.add("hidden")};$("yearTab").onclick=()=>{$("yearView").classList.remove("hidden");$("monthView").classList.add("hidden")};$("pm").onclick=()=>{cd.setMonth(cd.getMonth()-1);renderMonth()};$("nm").onclick=()=>{cd.setMonth(cd.getMonth()+1);renderMonth()};$("py").onclick=()=>{yr--;renderYear()};$("ny").onclick=()=>{yr++;renderYear()};
 new ResizeObserver(()=>{let w=stage.clientWidth,h=stage.clientHeight;ren.setSize(w,h,false);composer.setSize(w,h);fisheyePass.uniforms.aspect.value=w/Math.max(1,h);cam.aspect=w/h;cam.updateProjectionMatrix()}).observe(stage);function loop(){requestAnimationFrame(loop);ctl.update();composer.render()}loop();
 drawMannequin();$("lens").value="50";randomCam();today();tui();try{let s=await getAssetSet();if(s?.length)await loadAssetSet(s)}catch(e){console.warn(e)}
 </script>
