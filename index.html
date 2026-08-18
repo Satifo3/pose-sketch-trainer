@@ -91,9 +91,9 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
     <label>現在のレンズ / 手動確認
       <select id="lens">
         <option value="24">広角 24mm</option>
-        <option value="80" selected>標準 80mm</option>
+        <option value="50" selected>標準 50mm</option>
         <option value="120">望遠 120mm</option>
-        <option value="300">超望遠 300mm</option>
+        
         <option value="fisheye">魚眼レンズ</option>
       </select>
     </label>
@@ -101,12 +101,12 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
     <label>次ポーズでランダム使用するレンズ</label>
     <div class="lens-filter" id="lensFilter">
       <label class="lens-choice"><input class="lens-check" type="checkbox" value="24" checked>24mm 広角</label>
-      <label class="lens-choice"><input class="lens-check" type="checkbox" value="80" checked>80mm 標準</label>
+      <label class="lens-choice"><input class="lens-check" type="checkbox" value="50" checked>50mm 標準</label>
       <label class="lens-choice"><input class="lens-check" type="checkbox" value="120" checked>120mm 望遠</label>
-      <label class="lens-choice"><input class="lens-check" type="checkbox" value="300" checked>300mm 超望遠</label>
+      
       <label class="lens-choice wide"><input class="lens-check" type="checkbox" value="fisheye" checked>魚眼レンズ</label>
     </div>
-    <div class="lens-note" id="lensFilterNote">5種類すべてからランダム</div>
+    <div class="lens-note" id="lensFilterNote">4種類すべてからランダム</div>
 
     <label>ライト
       <select id="lighting">
@@ -279,17 +279,17 @@ function frameSubject(direction=null){
   const di=$("distanceInfo");
   if(di)di.textContent=`距離 ${dist.toFixed(1)} / 表示 ${Math.round(targetFill*100)}%`;
 }
-const LENS_FILTER_KEY="poseTrainerLensFilterV47";
-const ALL_LENSES=["24","80","120","300","fisheye"];
+const LENS_FILTER_KEY="drawingLabsLensFilterV48";
+const ALL_LENSES=["24","50","120","fisheye"];
 
 function selectedRandomLenses(){
   const selected=[...document.querySelectorAll(".lens-check:checked")].map(x=>x.value).filter(v=>ALL_LENSES.includes(v));
 
   // Safety: never allow an empty random pool.
   if(!selected.length){
-    const fallback=document.querySelector('.lens-check[value="80"]') || document.querySelector(".lens-check");
+    const fallback=document.querySelector('.lens-check[value="50"]') || document.querySelector(".lens-check");
     if(fallback)fallback.checked=true;
-    return fallback?[fallback.value]:["80"];
+    return fallback?[fallback.value]:["50"];
   }
   return selected;
 }
@@ -300,9 +300,9 @@ function updateLensFilterUI(){
 
   if(note){
     if(selected.length===ALL_LENSES.length){
-      note.textContent="5種類すべてからランダム";
+      note.textContent="4種類すべてからランダム";
     }else if(selected.length===1){
-      const names={"24":"24mm 広角","80":"80mm 標準","120":"120mm 望遠","300":"300mm 超望遠","fisheye":"魚眼"};
+      const names={"24":"24mm 広角","50":"50mm 標準","120":"120mm 望遠","fisheye":"魚眼"};
       note.textContent=`固定：${names[selected[0]]}`;
     }else{
       note.textContent=`選択した ${selected.length} 種類からランダム`;
@@ -336,7 +336,7 @@ document.querySelectorAll(".lens-check").forEach(cb=>{
 
 function randomCam(){
   const pool=selectedRandomLenses();
-  const lens=pool[Math.floor(Math.random()*pool.length)] || "80";
+  const lens=pool[Math.floor(Math.random()*pool.length)] || "50";
 
   $("lens").value=lens;
   applyLens(lens,false);
@@ -732,6 +732,6 @@ function streak(){let l=loadLog(),ks=Object.keys(l).filter(k=>l[k].count).sort()
 function summary(){let l=loadLog(),n=new Date(),days=0,c=0;for(let[k,v]of Object.entries(l)){let d=new Date(k+"T00:00:00");if(d.getFullYear()==n.getFullYear()&&d.getMonth()==n.getMonth()&&v.count){days++;c+=v.count}}let s=streak();$("mDays").textContent=days+"日";$("mCount").textContent=c+"枚";$("streak").textContent=s[0]+"日";$("best").textContent=s[1]+"日"}function renderStats(){renderMonth();renderYear();summary()}
 $("statsBtn").onclick=()=>{renderStats();$("dlg").showModal()};$("close").onclick=()=>$("dlg").close();$("monthTab").onclick=()=>{$("monthView").classList.remove("hidden");$("yearView").classList.add("hidden")};$("yearTab").onclick=()=>{$("yearView").classList.remove("hidden");$("monthView").classList.add("hidden")};$("pm").onclick=()=>{cd.setMonth(cd.getMonth()-1);renderMonth()};$("nm").onclick=()=>{cd.setMonth(cd.getMonth()+1);renderMonth()};$("py").onclick=()=>{yr--;renderYear()};$("ny").onclick=()=>{yr++;renderYear()};
 new ResizeObserver(()=>{let w=stage.clientWidth,h=stage.clientHeight;ren.setSize(w,h,false);composer.setSize(w,h);fisheyePass.uniforms.aspect.value=w/Math.max(1,h);cam.aspect=w/h;cam.updateProjectionMatrix()}).observe(stage);function loop(){requestAnimationFrame(loop);ctl.update();composer.render()}loop();
-drawMannequin();$("lens").value="80";randomCam();today();tui();try{let s=await getAssetSet();if(s?.length)await loadAssetSet(s)}catch(e){console.warn(e)}
+drawMannequin();$("lens").value="50";randomCam();today();tui();try{let s=await getAssetSet();if(s?.length)await loadAssetSet(s)}catch(e){console.warn(e)}
 </script>
 </body></html>
