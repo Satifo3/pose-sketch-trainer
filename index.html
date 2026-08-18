@@ -15,7 +15,7 @@ button.dark{background:var(--p2);color:var(--tx)}header{display:flex;justify-con
 h1{font-size:17px;margin:0;letter-spacing:.08em}.sub{font-size:10px;color:var(--mut);margin-top:3px}.badge{font-size:9px;background:var(--p2);border:1px solid var(--line);padding:6px 8px;border-radius:999px}
 .mobile{display:none}.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:12px;padding:12px}.card{background:var(--p);border:1px solid var(--line);border-radius:16px}
 .viewer{padding:10px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.ey{font-size:9px;color:var(--mut);font-weight:900;letter-spacing:.15em}.head h2{font-size:17px;margin:2px 0 0}
-#stage{height:calc(100dvh - 145px);min-height:500px;border-radius:13px;overflow:hidden;position:relative;background:radial-gradient(circle at 50% 28%,#30353d,#111318 72%)}
+#stage{height:calc(100dvh - 145px);min-height:500px;border-radius:13px;overflow:hidden;position:relative;background:radial-gradient(circle at 50% 28%,#e5e7eb,#b9bec5 78%)}
 #stage canvas{width:100%;height:100%;display:block;touch-action:none}.hud{position:absolute;top:8px;left:8px;z-index:2;display:flex;gap:5px;flex-wrap:wrap;pointer-events:none}.hud span{font-size:9px;background:#0b0d10bb;border:1px solid #ffffff1f;padding:5px 7px;border-radius:8px}
 .actions{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:6px;margin-top:7px}.side{display:flex;flex-direction:column;gap:10px}.side .card{padding:12px}
 .timer{font-size:50px;font-weight:950;font-variant-numeric:tabular-nums;margin:4px 0 8px}.presets{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.presets button{padding:6px 2px;font-size:10px;min-height:36px}.row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}.check{display:flex;gap:7px;align-items:center;font-size:11px;color:#c9d0d9;margin-top:8px}
@@ -29,7 +29,7 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
 <body>
-<header><div><h1>POSE SKETCH TRAINER V4.3</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
+<header><div><h1>POSE SKETCH TRAINER V4.4</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
 <div class="mobile"><div><span>TIME</span><strong id="mt">05:00</strong></div><div><span>TODAY</span><strong id="md">0枚</strong></div><button id="ms">開始</button></div>
 <main class="layout">
 <section class="card viewer">
@@ -50,8 +50,8 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 <option value="120">望遠 120mm</option>
 <option value="300">超望遠 300mm</option>
 <option value="fisheye">魚眼レンズ</option>
-</select></label><label>モデル表示サイズ<select id="subjectFill"><option value="0.70">70%</option><option value="0.78" selected>78%</option><option value="0.85">85%</option></select></label><label>ライト<select id="lighting"><option value="soft">Soft Studio</option><option value="hard">Hard Shadow</option><option value="flat">Flat</option></select></label><label><input id="grid" type="checkbox" checked> 床グリッド</label></div></section>
-<section class="card"><span class="ey">3D MODEL IMPORT / FISHEYE CLOSEUP</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
+</select></label><label>ライト<select id="lighting"><option value="soft">Soft Studio</option><option value="hard">Hard Shadow</option><option value="flat">Flat</option></select></label><label><input id="grid" type="checkbox" checked> 床グリッド</label></div></section>
+<section class="card"><span class="ey">3D MODEL IMPORT / FULL FRAME</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
 </aside></main>
 <dialog id="dlg"><div class="dh"><h2 style="margin:0">デッサン記録</h2><button id="close" class="dark">閉じる</button></div>
 <div class="summary"><div class="stat"><span>今月の練習日</span><strong id="mDays">0日</strong></div><div class="stat"><span>今月の枚数</span><strong id="mCount">0枚</strong></div><div class="stat"><span>現在の連続</span><strong id="streak">0日</strong></div><div class="stat"><span>最長連続</span><strong id="best">0日</strong></div></div>
@@ -72,8 +72,8 @@ const $=x=>document.getElementById(x),stage=$("stage");
 const ren=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:"high-performance"});ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.outputColorSpace=THREE.SRGBColorSpace;stage.prepend(ren.domElement);
 const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.01,100);cam.position.set(4,2.6,6);cam.setFocalLength(80);
 const ctl=new OrbitControls(cam,ren.domElement);ctl.enableDamping=true;ctl.target.set(0,1.4,0);ctl.minDistance=.8;ctl.maxDistance=160;ctl.maxPolarAngle=Math.PI*.95;
-const hemi=new THREE.HemisphereLight(0xffffff,0x26313d,1.5),key=new THREE.DirectionalLight(0xffffff,3.2),rim=new THREE.DirectionalLight(0xc8dcff,1);key.position.set(4,7,5);rim.position.set(-4,3,-4);key.castShadow=true;scene.add(hemi,key,rim);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshStandardMaterial({color:0x181b21,roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);const grid=new THREE.GridHelper(20,40,0x5b6675,0x323844);grid.position.y=.003;scene.add(grid);
+const hemi=new THREE.HemisphereLight(0xffffff,0x8f969f,1.35),key=new THREE.DirectionalLight(0xffffff,3.2),rim=new THREE.DirectionalLight(0xc8dcff,1);key.position.set(4,7,5);rim.position.set(-4,3,-4);key.castShadow=true;scene.add(hemi,key,rim);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshStandardMaterial({color:0xc9cdd2,roughness:.96,metalness:0}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);const grid=new THREE.GridHelper(20,40,0x555b63,0x8b929b);grid.position.y=.003;scene.add(grid);
 const fisheyeShader={uniforms:{tDiffuse:{value:null},strength:{value:0},aspect:{value:1}},vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,fragmentShader:`uniform sampler2D tDiffuse;uniform float strength;uniform float aspect;varying vec2 vUv;void main(){vec2 p=vUv-0.5;p.x*=aspect;float r2=dot(p,p);vec2 q=p*(1.0+strength*r2);q.x/=aspect;vec2 uv=q+0.5;if(uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0){gl_FragColor=vec4(0.02,0.02,0.025,1.0);}else{gl_FragColor=texture2D(tDiffuse,uv);}}`};
 const composer=new EffectComposer(ren);composer.addPass(new RenderPass(scene,cam));const fisheyePass=new ShaderPass(fisheyeShader);composer.addPass(fisheyePass);
 const mtl=new THREE.MeshStandardMaterial({color:0xbfc4ca,roughness:.72}),jmtl=new THREE.MeshStandardMaterial({color:0x9098a2,roughness:.75});
@@ -111,8 +111,7 @@ function frameSubject(direction=null){
 
   // Target: subject occupies roughly 78% of the preview height.
   // Using the bounding sphere keeps hands/feet inside the frame even on dynamic poses.
-  const userFill = parseFloat($("subjectFill")?.value || "0.78");
-  const targetFill = lens==="fisheye" ? Math.max(.88,Math.min(.92,userFill+.12)) : userFill;
+  const targetFill = lens==="fisheye" ? 1.30 : 1.00;
   const halfDesiredAngle = Math.max(0.004, (vfov * targetFill) / 2);
 
   // Distance required for the bounding sphere to fill targetFill of screen height.
@@ -125,14 +124,14 @@ function frameSubject(direction=null){
     "80": 1.02,
     "120": 1.015,
     "300": 1.01,
-    "fisheye": 0.86
+    "fisheye": 0.72
   };
   dist *= compositionScale[lens] || 1;
 
   if(lens==="fisheye"){
-    // Deliberately move closer for anime-style fisheye impact.
-    // The subject should dominate the frame while still leaving a small safety margin.
-    dist=Math.max(b.radius*1.05,dist*.72);
+    // Extreme anime-style fisheye close-up.
+    // 130% means limbs may intentionally approach or cross the frame edges.
+    dist=Math.max(b.radius*.72,dist*.54);
   }
 
   ctl.minDistance=Math.max(.45,b.radius*.28);
@@ -160,7 +159,6 @@ function randomCam(){let lens=["24","80","120","300","fisheye"][Math.floor(Math.
 function randomPose(){if(!importedPose())drawMannequin();randomCam()}
 $("random").onclick=randomPose;$("front").onclick=()=>{applyLens($("lens").value,false);frameSubject(new THREE.Vector3(0,.04,1));$("cam").textContent=`${$("lens").value==="fisheye"?"魚眼":$("lens").value+"mm"} / 正面`};$("resetCam").onclick=()=>{applyLens($("lens").value,false);frameSubject(new THREE.Vector3(.55,.25,.8).normalize())};
 $("lens").onchange=e=>{applyLens(e.target.value,true);$("cam").textContent=`${e.target.value==="fisheye"?"魚眼":e.target.value+"mm"} / 手動`};$("grid").onchange=e=>grid.visible=e.target.checked;$("lighting").onchange=e=>{let v=e.target.value;if(v==="soft"){hemi.intensity=1.5;key.intensity=3.2;rim.intensity=1}else if(v==="hard"){hemi.intensity=.45;key.intensity=5;rim.intensity=.2}else{hemi.intensity=2.2;key.intensity=.8;rim.intensity=.1}};
-$("subjectFill").onchange=()=>frameSubject();
 const DB="PoseTrainerDBV4",STORE="assets";function openDB(){return new Promise((ok,no)=>{let q=indexedDB.open(DB,1);q.onupgradeneeded=()=>q.result.createObjectStore(STORE);q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}
 async function saveAssetSet(files){let d=await openDB(),items=[];for(const f of files)items.push({name:f.name,type:f.type,buf:await f.arrayBuffer()});return new Promise((ok,no)=>{let t=d.transaction(STORE,"readwrite");t.objectStore(STORE).put(items,"modelFiles");t.oncomplete=ok;t.onerror=()=>no(t.error)})}
 async function getAssetSet(){let d=await openDB();return new Promise((ok,no)=>{let q=d.transaction(STORE).objectStore(STORE).get("modelFiles");q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}
