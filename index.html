@@ -33,53 +33,40 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 .lens-note{font-size:9px;color:var(--mut);line-height:1.45;margin-top:6px}
 
 
-.top-actions{display:flex;gap:7px;align-items:center}
-.top-action-btn{min-width:0!important;width:auto!important;padding:10px 13px!important;white-space:nowrap;font-size:11px!important}
+.v51-top-actions{display:flex;gap:5px;align-items:center}
+.v51-top-btn{width:auto!important;min-width:0!important;white-space:nowrap;padding:9px 11px!important;font-size:10px!important}
+.v51-internal-status,.v51-hidden-control{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;opacity:0!important;pointer-events:none!important}
 #modelImportAnchor{scroll-margin-top:18px}
-.records-page{position:fixed;inset:0;z-index:9999;overflow:auto;background:#fff;color:#111;padding:calc(18px + env(safe-area-inset-top)) 12px calc(24px + env(safe-area-inset-bottom))}
-.records-shell{max-width:900px;margin:0 auto}
-.records-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
-.records-back{width:auto!important;background:#111!important;color:#fff!important;border-color:#111!important;border-radius:999px!important;padding:11px 16px!important}
-.records-kicker{font-size:10px;font-weight:900;letter-spacing:.18em;color:#888}
-.records-top h2{margin:2px 0 0;font-size:27px}
-.records-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:18px}
-.records-summary>div{background:#f5f5f5;border:1px solid #e5e5e5;border-radius:13px;padding:11px}
-.records-summary span,.records-detail span{display:block;font-size:9px;font-weight:900;color:#777;letter-spacing:.04em}
-.records-summary strong{display:block;margin-top:4px;font-size:18px}
-.records-monthbar{display:flex;align-items:center;justify-content:space-between;margin:8px 0}
-.records-monthbar button{width:46px!important;background:#f2f2f2!important;color:#111!important;border-color:#ddd!important}
-.records-monthbar strong{font-size:24px}
-.records-week,.records-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.records-week span{text-align:center;font-size:10px;font-weight:900;color:#777;padding:6px 0}
-.records-day{position:relative;min-height:76px;background:#fff!important;color:#111!important;border:1px solid #e3e3e3!important;border-radius:9px!important;padding:7px!important;text-align:left!important}
-.records-day.practice{background:#ffd84d!important;border-color:#e0b500!important}
-.records-day.today{box-shadow:inset 0 0 0 3px #ff4b4b}
-.records-day.blank{visibility:hidden}
-.records-day .n{font-weight:900;font-size:12px}
-.records-day .c{position:absolute;left:6px;bottom:6px;font-size:8px;font-weight:900;color:#654f00}
-.records-detail{margin-top:14px;background:#f7f7f7;border:1px solid #e5e5e5;border-radius:14px;padding:14px}
-.records-detail h3{margin:0 0 10px;font-size:16px}
-.records-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.records-detail-grid>div{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:10px}
-.records-detail strong{display:block;margin-top:4px;font-size:17px}
-@media(max-width:620px){
- .top-actions{gap:4px}.top-action-btn{padding:8px 9px!important;font-size:10px!important}
- .records-detail-grid{grid-template-columns:1fr}
- .records-day{min-height:68px}
-}
+.v51-flash{animation:v51flash .95s ease-out}
+@keyframes v51flash{0%{box-shadow:0 0 0 0 rgba(255,216,77,0)}38%{box-shadow:0 0 0 4px rgba(255,216,77,.95)}100%{box-shadow:0 0 0 0 rgba(255,216,77,0)}}
+#v51RecordsPage[hidden]{display:none!important}
+#v51RecordsPage{position:fixed;inset:0;z-index:2147483000;overflow:auto;background:#fff;color:#111;padding:calc(16px + env(safe-area-inset-top)) 12px calc(24px + env(safe-area-inset-bottom));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.v51-records-shell{max-width:920px;margin:0 auto}
+.v51-records-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.v51-back{width:auto!important;background:#111!important;color:#fff!important;border:1px solid #111!important;border-radius:999px!important;padding:10px 15px!important;min-height:44px!important}
+.v51-records-title{font-size:27px;margin:0}.v51-records-sub{font-size:10px;color:#777;margin-top:3px}
+.v51-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0 18px}
+.v51-summary>div{background:#f5f5f5;border:1px solid #e4e4e4;border-radius:13px;padding:11px}
+.v51-summary span,.v51-detail span{display:block;font-size:9px;color:#777;font-weight:900;letter-spacing:.04em}
+.v51-summary strong{display:block;margin-top:4px;font-size:19px}
+.v51-monthbar{display:flex;align-items:center;justify-content:space-between;margin:6px 0 8px}.v51-monthbar strong{font-size:25px}.v51-monthbar button{width:46px!important;background:#f3f3f3!important;color:#111!important;border:1px solid #ddd!important}
+.v51-week,.v51-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.v51-week span{text-align:center;color:#777;font-size:10px;font-weight:900;padding:5px 0}
+.v51-day{position:relative;min-height:78px;background:#fff!important;color:#111!important;border:1px solid #e1e1e1!important;border-radius:9px!important;padding:7px!important;text-align:left!important;min-width:0!important}
+.v51-day.practice{background:#ffd84d!important;border-color:#dfb900!important}.v51-day.today{box-shadow:inset 0 0 0 3px #ff4b4b}.v51-day.blank{visibility:hidden}.v51-day .n{font-size:12px;font-weight:900}.v51-day .c{position:absolute;left:6px;bottom:6px;font-size:8px;font-weight:900;color:#604b00}
+.v51-detail{margin-top:14px;background:#f7f7f7;border:1px solid #e5e5e5;border-radius:14px;padding:14px}.v51-detail h3{margin:0 0 10px;font-size:16px}.v51-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.v51-detail-grid>div{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:10px}.v51-detail strong{display:block;margin-top:4px;font-size:17px}
+@media(max-width:620px){.v51-top-actions{gap:4px}.v51-top-btn{padding:8px 8px!important;font-size:10px!important}.v51-summary{gap:5px}.v51-summary>div{padding:9px}.v51-summary strong{font-size:17px}.v51-day{min-height:66px;padding:5px!important}.v51-detail-grid{grid-template-columns:1fr}}
 
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
 <body>
 <header>
-  <div>
-    <h1>Drawing Labs</h1>
-    <div class="sub">3D FIGURE DRAWING / ANIME CAMERA TRAINING</div>
-  </div>
-  <div class="top-actions">
-    <button type="button" id="modelSettingsBtn" class="dark top-action-btn">モデル設定</button>
-    <button type="button" id="recordsBtn" class="dark top-action-btn">記録</button>
+  <div><h1>Drawing Labs</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT</div></div>
+  <div class="v51-top-actions">
+    <span id="src" class="badge v51-internal-status" aria-hidden="true">3D MANNEQUIN</span>
+    <button type="button" id="modelSettingsBtn" class="dark v51-top-btn">モデル設定</button>
+    <button type="button" id="recordsBtn" class="dark v51-top-btn">記録</button>
+    <button type="button" id="statsBtn" class="dark v51-hidden-control" aria-hidden="true" tabindex="-1">旧記録</button>
   </div>
 </header>
 <div class="mobile"><div><span>TIME</span><strong id="mt">05:00</strong></div><div><span>TODAY</span><strong id="md">0枚</strong></div><button id="ms">開始</button></div>
@@ -780,149 +767,57 @@ new ResizeObserver(()=>{let w=stage.clientWidth,h=stage.clientHeight;ren.setSize
 drawMannequin();$("lens").value="50";randomCam();today();tui();try{let s=await getAssetSet();if(s?.length)await loadAssetSet(s)}catch(e){console.warn(e)}
 </script>
 
-<div id="recordsPage" class="records-page" hidden>
-  <div class="records-shell">
-    <div class="records-top">
-      <button type="button" id="recordsBackBtn" class="records-back">← Drawing Labs</button>
-      <div>
-        <div class="records-kicker">DRAWING LOG</div>
-        <h2>練習カレンダー</h2>
-      </div>
-    </div>
-
-    <div class="records-summary">
-      <div><span>今月の練習日</span><strong id="monthPracticeDays">0日</strong></div>
-      <div><span>今月の枚数</span><strong id="monthDrawings">0枚</strong></div>
-      <div><span>今月の時間</span><strong id="monthMinutes">0分</strong></div>
-    </div>
-
-    <div class="records-monthbar">
-      <button type="button" id="recordsPrev">‹</button>
-      <strong id="recordsMonthTitle">----</strong>
-      <button type="button" id="recordsNext">›</button>
-    </div>
-
-    <div class="records-week">
-      <span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>
-    </div>
-    <div id="recordsCalendar" class="records-calendar"></div>
-
-    <div id="recordsDetail" class="records-detail">
-      <h3>日付をタップ</h3>
-      <div class="records-detail-grid">
-        <div><span>日付</span><strong id="detailDate">—</strong></div>
-        <div><span>デッサンした枚数</span><strong id="detailCount">—</strong></div>
-        <div><span>1日のプレイ時間</span><strong id="detailTime">—</strong></div>
-      </div>
-    </div>
+<div id="v51RecordsPage" hidden>
+ <div class="v51-records-shell">
+  <div class="v51-records-head">
+   <button type="button" id="v51Back" class="v51-back">← Drawing Labs</button>
+   <div><h2 class="v51-records-title">練習カレンダー</h2><div class="v51-records-sub">練習した日は黄色で表示</div></div>
   </div>
+  <div class="v51-summary">
+   <div><span>今月の練習日</span><strong id="v51PracticeDays">0日</strong></div>
+   <div><span>今月のデッサン</span><strong id="v51MonthCount">0枚</strong></div>
+   <div><span>今月のプレイ時間</span><strong id="v51MonthTime">0分</strong></div>
+  </div>
+  <div class="v51-monthbar"><button type="button" id="v51Prev">‹</button><strong id="v51MonthTitle">----</strong><button type="button" id="v51Next">›</button></div>
+  <div class="v51-week"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
+  <div id="v51Calendar" class="v51-grid"></div>
+  <div class="v51-detail"><h3>日付をタップすると詳細を表示</h3><div class="v51-detail-grid">
+   <div><span>日付</span><strong id="v51DetailDate">—</strong></div>
+   <div><span>デッサンした枚数</span><strong id="v51DetailCount">—</strong></div>
+   <div><span>1日のプレイ時間</span><strong id="v51DetailTime">—</strong></div>
+  </div></div>
+ </div>
 </div>
 
 
 <script>
-(() => {
-  "use strict";
-
-  const q = id => document.getElementById(id);
-  const modelBtn=q("modelSettingsBtn"), recordsBtn=q("recordsBtn"), recordsPage=q("recordsPage");
-  if(!modelBtn || !recordsBtn || !recordsPage) return;
-
-  let viewDate=new Date();
-
-  function getLogSafe(){
-    try{
-      if(typeof loadLog==="function") return loadLog() || {};
-    }catch(e){ console.warn("Drawing Labs: loadLog fallback",e); }
-
-    const keys=["poseSketchLog","drawingLabsLog","poseTrainerLog"];
-    for(const k of keys){
-      try{
-        const v=JSON.parse(localStorage.getItem(k)||"null");
-        if(v && typeof v==="object") return v;
-      }catch(e){}
-    }
-    return {};
-  }
-
-  function keyFor(d){
-    try{
-      if(typeof dk==="function") return dk(d);
-    }catch(e){}
-    const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
-    return `${y}-${m}-${day}`;
-  }
-
-  function timeText(mins){
-    const n=Math.round(Number(mins)||0);
-    const h=Math.floor(n/60), m=n%60;
-    if(h && m) return `${h}時間${m}分`;
-    if(h) return `${h}時間`;
-    return `${m}分`;
-  }
-
-  function renderRecords(){
-    const y=viewDate.getFullYear(), m=viewDate.getMonth();
-    const log=getLogSafe();
-    const first=new Date(y,m,1).getDay();
-    const days=new Date(y,m+1,0).getDate();
-    let practice=0,count=0,minutes=0;
-
-    Object.entries(log).forEach(([k,v])=>{
-      const d=new Date(k+"T00:00:00");
-      if(!Number.isNaN(d.getTime()) && d.getFullYear()===y && d.getMonth()===m){
-        const c=Number(v?.count)||0, mins=Number(v?.minutes)||0;
-        if(c>0 || mins>0) practice++;
-        count+=c; minutes+=mins;
-      }
-    });
-
-    q("monthPracticeDays").textContent=`${practice}日`;
-    q("monthDrawings").textContent=`${count}枚`;
-    q("monthMinutes").textContent=timeText(minutes);
-    q("recordsMonthTitle").textContent=`${y}年 ${m+1}月`;
-
-    const grid=q("recordsCalendar");
-    grid.innerHTML="";
-    for(let i=0;i<first;i++){
-      const b=document.createElement("div"); b.className="records-day blank"; grid.appendChild(b);
-    }
-    for(let day=1;day<=days;day++){
-      const d=new Date(y,m,day), key=keyFor(d), item=log[key]||{};
-      const c=Number(item.count)||0, mins=Number(item.minutes)||0;
-      const practiced=c>0 || mins>0;
-      const btn=document.createElement("button");
-      btn.type="button";
-      btn.className="records-day"+(practiced?" practice":"")+(key===keyFor(new Date())?" today":"");
-      btn.innerHTML=`<span class="n">${day}</span>${practiced?`<span class="c">${c}枚</span>`:""}`;
-      btn.addEventListener("click",()=>{
-        q("detailDate").textContent=`${y}年${m+1}月${day}日`;
-        q("detailCount").textContent=`${c}枚`;
-        q("detailTime").textContent=timeText(mins);
-      });
-      grid.appendChild(btn);
-    }
-  }
-
-  modelBtn.addEventListener("click",()=>{
-    const target=q("modelImportAnchor");
-    if(!target) return;
-    target.scrollIntoView({behavior:"smooth",block:"start"});
-  });
-
-  recordsBtn.addEventListener("click",()=>{
-    viewDate=new Date();
-    renderRecords();
-    recordsPage.hidden=false;
-    document.documentElement.style.overflow="hidden";
-    recordsPage.scrollTop=0;
-  });
-
-  q("recordsBackBtn").addEventListener("click",()=>{
-    recordsPage.hidden=true;
-    document.documentElement.style.overflow="";
-  });
-  q("recordsPrev").addEventListener("click",()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()-1,1);renderRecords();});
-  q("recordsNext").addEventListener("click",()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()+1,1);renderRecords();});
+(function(){
+ "use strict";
+ const $v=id=>document.getElementById(id);
+ const LOG_KEY="poseTrainerLogV3";
+ let viewDate=new Date();
+ function readLog(){try{const x=JSON.parse(localStorage.getItem(LOG_KEY)||"{}");return x&&typeof x==="object"?x:{}}catch(e){return {}}}
+ function keyFor(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+ function timeText(mins){const n=Math.max(0,Math.round(Number(mins)||0)),h=Math.floor(n/60),m=n%60;if(h&&m)return `${h}時間${m}分`;if(h)return `${h}時間`;return `${m}分`}
+ function render(){
+   const y=viewDate.getFullYear(),m=viewDate.getMonth(),log=readLog(),first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate();
+   let practice=0,count=0,minutes=0;
+   for(const [k,v] of Object.entries(log)){const d=new Date(k+"T00:00:00");if(!Number.isNaN(d.getTime())&&d.getFullYear()===y&&d.getMonth()===m){const c=Number(v&&v.count)||0,mi=Number(v&&v.minutes)||0;if(c>0||mi>0)practice++;count+=c;minutes+=mi}}
+   $v("v51PracticeDays").textContent=practice+"日";$v("v51MonthCount").textContent=count+"枚";$v("v51MonthTime").textContent=timeText(minutes);$v("v51MonthTitle").textContent=`${y}年 ${m+1}月`;
+   const grid=$v("v51Calendar");grid.innerHTML="";
+   for(let i=0;i<first;i++){const b=document.createElement("div");b.className="v51-day blank";grid.appendChild(b)}
+   for(let day=1;day<=days;day++){const d=new Date(y,m,day),k=keyFor(d),it=log[k]||{},c=Number(it.count)||0,mi=Number(it.minutes)||0,trained=c>0||mi>0;const b=document.createElement("button");b.type="button";b.className="v51-day"+(trained?" practice":"")+(k===keyFor(new Date())?" today":"");b.innerHTML=`<span class="n">${day}</span>${trained?`<span class="c">${c}枚</span>`:""}`;b.addEventListener("click",function(){$v("v51DetailDate").textContent=`${y}年${m+1}月${day}日`;$v("v51DetailCount").textContent=c+"枚";$v("v51DetailTime").textContent=timeText(mi)});grid.appendChild(b)}
+ }
+ function openRecords(){viewDate=new Date();render();$v("v51RecordsPage").hidden=false;document.documentElement.style.overflow="hidden"}
+ function closeRecords(){$v("v51RecordsPage").hidden=true;document.documentElement.style.overflow=""}
+ document.addEventListener("DOMContentLoaded",function(){
+   const model=$v("modelSettingsBtn"),records=$v("recordsBtn"),anchor=$v("modelImportAnchor");
+   if(model&&anchor)model.addEventListener("click",function(){anchor.scrollIntoView({behavior:"smooth",block:"start"});anchor.classList.remove("v51-flash");void anchor.offsetWidth;anchor.classList.add("v51-flash")});
+   if(records)records.addEventListener("click",openRecords);
+   $v("v51Back")&&$v("v51Back").addEventListener("click",closeRecords);
+   $v("v51Prev")&&$v("v51Prev").addEventListener("click",function(){viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()-1,1);render()});
+   $v("v51Next")&&$v("v51Next").addEventListener("click",function(){viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()+1,1);render()});
+ });
 })();
 </script>
 
