@@ -1,155 +1,102 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
-  <meta name="theme-color" content="#f3f4f6" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Pose Trainer" />
-  <title>Pose Sketch Trainer</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#101216">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Pose Sketch Trainer V3</title>
+<style>
+:root{--bg:#101216;--p:#181b21;--p2:#20242c;--line:#303642;--tx:#f4f6f8;--mut:#9aa4b1;--green:#46a36f}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100dvh;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+button,select{font:inherit}button{min-height:44px;border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-weight:800;background:#fff;color:#111}
+button.dark{background:var(--p2);color:var(--tx)}header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+h1{font-size:17px;margin:0;letter-spacing:.08em}.sub{font-size:10px;color:var(--mut);margin-top:3px}.badge{font-size:9px;background:var(--p2);border:1px solid var(--line);padding:6px 8px;border-radius:999px}
+.mobile{display:none}.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:12px;padding:12px}.card{background:var(--p);border:1px solid var(--line);border-radius:16px}
+.viewer{padding:10px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.ey{font-size:9px;color:var(--mut);font-weight:900;letter-spacing:.15em}.head h2{font-size:17px;margin:2px 0 0}
+#stage{height:calc(100dvh - 145px);min-height:500px;border-radius:13px;overflow:hidden;position:relative;background:radial-gradient(circle at 50% 28%,#30353d,#111318 72%)}
+#stage canvas{width:100%;height:100%;display:block;touch-action:none}.hud{position:absolute;top:8px;left:8px;z-index:2;display:flex;gap:5px;flex-wrap:wrap;pointer-events:none}.hud span{font-size:9px;background:#0b0d10bb;border:1px solid #ffffff1f;padding:5px 7px;border-radius:8px}
+.actions{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:6px;margin-top:7px}.side{display:flex;flex-direction:column;gap:10px}.side .card{padding:12px}
+.timer{font-size:50px;font-weight:950;font-variant-numeric:tabular-nums;margin:4px 0 8px}.presets{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.presets button{padding:6px 2px;font-size:10px;min-height:36px}.row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}.check{display:flex;gap:7px;align-items:center;font-size:11px;color:#c9d0d9;margin-top:8px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.stat{background:var(--p2);border:1px solid var(--line);border-radius:11px;padding:9px}.stat strong{display:block;font-size:22px}.stat span{font-size:9px;color:var(--mut)}
+.controls{display:grid;gap:8px;margin-top:8px}.controls label{font-size:10px;color:var(--mut);font-weight:800}.controls select{width:100%;margin-top:4px;padding:9px;background:var(--p2);color:var(--tx);border:1px solid var(--line);border-radius:9px}
+.model{border:1px dashed #45505f;border-radius:11px;padding:9px;margin-top:8px}.modelstatus{font-size:11px;margin-bottom:7px}.modelstatus small{display:block;color:var(--mut);margin-top:3px}.file{display:flex;justify-content:center;align-items:center;min-height:44px;background:#fff;color:#111;border-radius:10px;font-size:11px;font-weight:900}input[type=file]{display:none}.help{font-size:9px;line-height:1.5;color:var(--mut)}
+dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx);border:1px solid var(--line);border-radius:17px;padding:14px}dialog::backdrop{background:#000a}.dh,.calnav{display:flex;justify-content:space-between;align-items:center}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}.summary .stat strong{font-size:18px}.tabs{display:flex;gap:6px;margin:8px 0}.week,.month{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.week span{text-align:center;font-size:9px;color:var(--mut);padding:4px}.day{min-height:65px;background:#fff;color:#15171a;border-radius:8px;padding:5px;position:relative}.day.done{background:var(--green);color:#fff}.day.empty{opacity:0}.dn{font-size:10px;font-weight:900}.dc{position:absolute;right:5px;bottom:5px;font-size:8px;font-weight:900}.year{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.ym{border:1px solid var(--line);border-radius:8px;padding:6px}.ym h4{font-size:9px;margin:0 0 5px}.mini{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.md{aspect-ratio:1;background:#fff;border-radius:2px}.md.done{background:var(--green)}.md.empty{opacity:0}.hidden{display:none!important}
+@media(max-width:800px){header{padding:9px 10px}.sub{display:none}.mobile{position:sticky;top:env(safe-area-inset-top);z-index:10;display:grid;grid-template-columns:1fr 1fr 1.1fr;gap:5px;padding:6px 8px;background:#101216f0;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.mobile div{background:var(--p);border:1px solid var(--line);border-radius:9px;padding:5px 7px}.mobile span{display:block;font-size:7px;color:var(--mut)}.mobile strong{font-size:16px}.layout{grid-template-columns:1fr;padding:7px;gap:7px}.viewer{padding:7px}#stage{height:56dvh;min-height:390px}.side{gap:7px}.timer{font-size:40px}.summary{grid-template-columns:1fr 1fr}.year{grid-template-columns:1fr 1fr}dialog{width:100vw;height:100dvh;max-height:none;border-radius:0;margin:0;padding:calc(10px + env(safe-area-inset-top)) 8px calc(12px + env(safe-area-inset-bottom))}.day{min-height:50px}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
 <body>
-  <header class="topbar">
-    <div>
-      <h1>POSE SKETCH TRAINER</h1>
-      <p>3Dデッサン練習・タイマー・練習記録</p>
-    </div>
-    <button id="openStatsBtn" class="secondary">記録を見る</button>
-  </header>
-
-  <div class="mobile-session-bar">
-    <div><span>TIME</span><strong id="mobileTimer">05:00</strong></div>
-    <div><span>TODAY</span><strong id="mobileToday">0枚</strong></div>
-    <button id="mobileStartBtn">開始</button>
-  </div>
-
-  <main class="app-grid">
-    <section class="viewer-panel card">
-      <div class="viewer-header">
-        <div>
-          <span class="eyebrow">CURRENT SESSION</span>
-          <h2 id="poseName">Standing Twist</h2>
-        </div>
-        <div class="badge" id="cameraBadge">斜め俯瞰</div>
-      </div>
-
-      <div id="viewer" class="viewer">
-        <canvas id="poseCanvas" width="900" height="620"></canvas>
-        <div id="pauseOverlay" class="pause-overlay hidden">PAUSED</div>
-      </div>
-
-      <div class="viewer-controls">
-        <button id="prevBtn" class="secondary">← 前へ</button>
-        <button id="randomBtn">ランダム</button>
-        <button id="nextBtn" class="secondary">次へ →</button>
-      </div>
-    </section>
-
-    <aside class="side-panel">
-      <section class="card timer-card">
-        <span class="eyebrow">TIMER</span>
-        <div id="timerDisplay" class="timer-display">05:00</div>
-
-        <div class="timer-presets">
-          <button data-minutes="0.5" class="preset secondary">30秒</button>
-          <button data-minutes="1" class="preset secondary">1分</button>
-          <button data-minutes="2" class="preset secondary">2分</button>
-          <button data-minutes="5" class="preset active">5分</button>
-          <button data-minutes="10" class="preset secondary">10分</button>
-        </div>
-
-        <div class="timer-actions">
-          <button id="startPauseBtn">開始</button>
-          <button id="resetBtn" class="secondary">リセット</button>
-        </div>
-
-        <label class="toggle-row">
-          <input type="checkbox" id="autoNext" checked />
-          <span>終了時に自動で次のポーズへ</span>
-        </label>
-        <label class="toggle-row">
-          <input type="checkbox" id="countOnComplete" checked />
-          <span>完了したポーズを1枚として記録</span>
-        </label>
-      </section>
-
-      <section class="card session-card">
-        <span class="eyebrow">TODAY</span>
-        <div class="session-stats">
-          <div><strong id="todayCount">0</strong><span>枚</span></div>
-          <div><strong id="todayMinutes">0</strong><span>分</span></div>
-        </div>
-        <button id="manualAddBtn" class="secondary wide">+ 1枚 手動追加</button>
-      </section>
-
-      <section class="card option-card">
-        <span class="eyebrow">VIEW</span>
-        <div class="select-grid">
-          <label>難易度
-            <select id="difficulty">
-              <option value="easy">Easy</option>
-              <option value="normal" selected>Normal</option>
-              <option value="hard">Hard</option>
-            </select>
-          </label>
-          <label>表示
-            <select id="renderMode">
-              <option value="body" selected>素体</option>
-              <option value="silhouette">シルエット</option>
-              <option value="wire">骨格風</option>
-            </select>
-          </label>
-        </div>
-      </section>
-    </aside>
-  </main>
-
-  <dialog id="statsDialog">
-    <div class="dialog-head">
-      <div>
-        <span class="eyebrow">TRAINING LOG</span>
-        <h2>デッサン記録</h2>
-      </div>
-      <button id="closeStatsBtn" class="secondary">閉じる</button>
-    </div>
-
-    <div class="stats-summary">
-      <div class="summary-box"><span>今月</span><strong id="monthDays">0日</strong><small>練習日数</small></div>
-      <div class="summary-box"><span>今月</span><strong id="monthCount">0枚</strong><small>総デッサン</small></div>
-      <div class="summary-box"><span>連続</span><strong id="streak">0日</strong><small>現在</small></div>
-      <div class="summary-box"><span>最長</span><strong id="bestStreak">0日</strong><small>連続記録</small></div>
-    </div>
-
-    <div class="stats-tabs">
-      <button id="monthTab" class="tab active">月間</button>
-      <button id="yearTab" class="tab secondary">年間</button>
-    </div>
-
-    <section id="monthView">
-      <div class="calendar-nav">
-        <button id="prevMonth" class="secondary">←</button>
-        <h3 id="calendarTitle"></h3>
-        <button id="nextMonth" class="secondary">→</button>
-      </div>
-      <div class="weekdays">
-        <span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span>
-      </div>
-      <div id="monthCalendar" class="month-calendar"></div>
-    </section>
-
-    <section id="yearView" class="hidden">
-      <div class="calendar-nav">
-        <button id="prevYear" class="secondary">←</button>
-        <h3 id="yearTitle"></h3>
-        <button id="nextYear" class="secondary">→</button>
-      </div>
-      <div id="yearGrid" class="year-grid"></div>
-      <p class="legend"><span class="legend-box blank"></span>未練習　<span class="legend-box done"></span>練習済み</p>
-    </section>
-  </dialog>
-
-  <script src="app.js"></script>
-</body>
-</html>
+<header><div><h1>POSE SKETCH TRAINER</h1><div class="sub">3D FIGURE DRAWING / MIXAMO READY</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
+<div class="mobile"><div><span>TIME</span><strong id="mt">05:00</strong></div><div><span>TODAY</span><strong id="md">0枚</strong></div><button id="ms">開始</button></div>
+<main class="layout">
+<section class="card viewer">
+ <div class="head"><div><span class="ey">DRAWING POSE</span><h2 id="poseName">3D Mannequin</h2></div><span class="badge" id="cam">35mm / 斜め</span></div>
+ <div id="stage"><div class="hud"><span>1本指: 回転</span><span>2本指: ズーム/移動</span><span id="poseInfo">内蔵ポーズ</span></div></div>
+ <div class="actions"><button id="front" class="dark">正面</button><button id="random">ランダム</button><button id="resetCam" class="dark">戻す</button></div>
+</section>
+<aside class="side">
+<section class="card"><span class="ey">TIMER</span><div id="timer" class="timer">05:00</div>
+ <div class="presets"><button class="dark p" data-s="30">30秒</button><button class="dark p" data-s="60">1分</button><button class="dark p" data-s="120">2分</button><button class="p" data-s="300">5分</button><button class="dark p" data-s="600">10分</button></div>
+ <div class="row"><button id="start">開始</button><button id="reset" class="dark">リセット</button></div>
+ <label class="check"><input id="autoNext" type="checkbox" checked>終了時に次のポーズ</label><label class="check"><input id="autoCount" type="checkbox" checked>完了時に1枚記録</label>
+</section>
+<section class="card"><span class="ey">TODAY</span><div class="stats"><div class="stat"><strong id="today">0</strong><span>DRAWINGS</span></div><div class="stat"><strong id="mins">0</strong><span>MINUTES</span></div></div><button id="add" class="dark" style="width:100%;margin-top:7px">+ 1枚</button></section>
+<section class="card"><span class="ey">CAMERA</span><div class="controls"><label>レンズ<select id="lens"><option>24</option><option selected>35</option><option>50</option><option>85</option></select></label><label>ライト<select id="lighting"><option value="soft">Soft Studio</option><option value="hard">Hard Shadow</option><option value="flat">Flat</option></select></label><label><input id="grid" type="checkbox" checked> 床グリッド</label></div></section>
+<section class="card"><span class="ey">ADOBE MIXAMO</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>Mixamo FBXを読み込むと置き換わります。</small></div><label class="file" for="fbx">Mixamo FBXを読み込む</label><input id="fbx" type="file" accept=".fbx"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">キャラクター＋アニメーション入りFBXなら、アニメーション中のランダムな瞬間を静止ポーズにします。読み込んだFBXはこの端末のブラウザ内に保存します。</p></div></section>
+</aside></main>
+<dialog id="dlg"><div class="dh"><h2 style="margin:0">デッサン記録</h2><button id="close" class="dark">閉じる</button></div>
+<div class="summary"><div class="stat"><span>今月の練習日</span><strong id="mDays">0日</strong></div><div class="stat"><span>今月の枚数</span><strong id="mCount">0枚</strong></div><div class="stat"><span>現在の連続</span><strong id="streak">0日</strong></div><div class="stat"><span>最長連続</span><strong id="best">0日</strong></div></div>
+<div class="tabs"><button id="monthTab">月間</button><button id="yearTab" class="dark">年間</button></div>
+<section id="monthView"><div class="calnav"><button id="pm" class="dark">←</button><h3 id="mTitle"></h3><button id="nm" class="dark">→</button></div><div class="week"><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span></div><div id="month" class="month"></div></section>
+<section id="yearView" class="hidden"><div class="calnav"><button id="py" class="dark">←</button><h3 id="yTitle"></h3><button id="ny" class="dark">→</button></div><div id="year" class="year"></div></section>
+</dialog>
+<script type="module">
+import * as THREE from "three";
+import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+import {FBXLoader} from "three/addons/loaders/FBXLoader.js";
+const $=x=>document.getElementById(x),stage=$("stage");
+const ren=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:"high-performance"});ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.outputColorSpace=THREE.SRGBColorSpace;stage.prepend(ren.domElement);
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.01,100);cam.position.set(4,2.6,6);cam.setFocalLength(35);
+const ctl=new OrbitControls(cam,ren.domElement);ctl.enableDamping=true;ctl.target.set(0,1.4,0);ctl.minDistance=2;ctl.maxDistance=12;ctl.maxPolarAngle=Math.PI*.95;
+const hemi=new THREE.HemisphereLight(0xffffff,0x26313d,1.5),key=new THREE.DirectionalLight(0xffffff,3.2),rim=new THREE.DirectionalLight(0xc8dcff,1);key.position.set(4,7,5);rim.position.set(-4,3,-4);key.castShadow=true;scene.add(hemi,key,rim);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshStandardMaterial({color:0x181b21,roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);const grid=new THREE.GridHelper(20,40,0x5b6675,0x323844);grid.position.y=.003;scene.add(grid);
+const mtl=new THREE.MeshStandardMaterial({color:0xbfc4ca,roughness:.72}),jmtl=new THREE.MeshStandardMaterial({color:0x9098a2,roughness:.75});
+let mannequin=null,model=null,mixer=null,clips=[];
+function cap(a,b,r,material=mtl){let v=new THREE.Vector3().subVectors(b,a),l=v.length(),o=new THREE.Mesh(new THREE.CapsuleGeometry(r,Math.max(.01,l-2*r),10,18),material);o.position.copy(a).add(b).multiplyScalar(.5);o.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.clone().normalize());o.castShadow=o.receiveShadow=true;return o}
+function sph(p,r,material=jmtl,s=[1,1,1]){let o=new THREE.Mesh(new THREE.SphereGeometry(r,22,18),material);o.position.copy(p);o.scale.set(...s);o.castShadow=o.receiveShadow=true;return o}
+function drawMannequin(){
+ if(mannequin)scene.remove(mannequin);mannequin=new THREE.Group();scene.add(mannequin);if(model)model.visible=false;
+ let hip=new THREE.Vector3(0,1.1,0),ch=new THREE.Vector3((Math.random()-.5)*.25,2, (Math.random()-.5)*.2),neck=new THREE.Vector3(ch.x*.6,2.4,ch.z*.5),head=new THREE.Vector3(neck.x,2.75,neck.z),sl=new THREE.Vector3(ch.x-.48,2.24,ch.z),sr=new THREE.Vector3(ch.x+.48,2.24,ch.z);
+ let el=new THREE.Vector3(-.75,1.75,.15),hl=new THREE.Vector3(-1,1.2,.25),er=new THREE.Vector3(.75,1.78,-.15),hr=new THREE.Vector3(1,1.2,-.25),kl=new THREE.Vector3(-.3,.62,.15),fl=new THREE.Vector3(-.42,.05,.25),kr=new THREE.Vector3(.32,.66,-.12),fr=new THREE.Vector3(.46,.05,-.22);
+ let t=Math.random();if(t<.2){er.set(.55,2.75,.05);hr.set(.42,3.25,.1)}else if(t<.4){el.set(-.72,2.05,.35);hl.set(-.35,1.65,.5);er.set(.72,1.8,-.35);hr.set(.35,2.22,-.45);kl.set(-.38,.78,.48);fl.set(-.66,.15,.82);kr.set(.42,.7,-.25);fr.set(.75,.08,-.55)}else if(t<.6){hip.y=.75;ch.y=1.62;neck.y=2.02;head.y=2.35;sl.y=sr.y=1.87;kl.set(-.58,.42,.35);fl.set(-.8,.05,.55);kr.set(.58,.45,.28);fr.set(.82,.05,.5)}else if(t<.8){el.set(-.62,2,.18);hl.set(-.22,2.16,.48);er.set(.6,2.02,.12);hr.set(.22,2.3,.44)}else{el.set(-.95,2.45,.25);hl.set(-1.35,2.72,.4);er.set(.9,2.55,-.1);hr.set(1.3,2.9,-.25)}
+ [cap(hip,ch,.27),cap(ch,neck,.17),cap(sl,sr,.15),cap(sl,el,.13),cap(el,hl,.105),cap(sr,er,.13),cap(er,hr,.105),cap(hip,kl,.18),cap(kl,fl,.14),cap(hip,kr,.18),cap(kr,fr,.14)].forEach(x=>mannequin.add(x));
+ [hip,ch,sl,sr,el,er,kl,kr].forEach((p,i)=>mannequin.add(sph(p,i<2?.18:.13)));mannequin.add(sph(head,.26,mtl,[.82,1.08,.9]));mannequin.add(sph(new THREE.Vector3(0,1.08,0),.31,mtl,[1.25,.72,.9]));mannequin.add(sph(new THREE.Vector3(ch.x,2.02,ch.z),.38,mtl,[1.28,1.15,.72]));mannequin.add(sph(hl,.11,mtl,[.7,1.3,.6]),sph(hr,.11,mtl,[.7,1.3,.6]),sph(fl,.15,mtl,[.7,.55,1.45]),sph(fr,.15,mtl,[.7,.55,1.45]));
+ $("poseName").textContent="Anatomy Mannequin";$("poseInfo").textContent="内蔵3Dポーズ";$("src").textContent="3D MANNEQUIN";
+}
+function fit(o){o.updateMatrixWorld(true);let b=new THREE.Box3().setFromObject(o),s=b.getSize(new THREE.Vector3());o.scale.setScalar(3/Math.max(s.y,.001));o.updateMatrixWorld(true);b.setFromObject(o);let c=b.getCenter(new THREE.Vector3());o.position.x-=c.x;o.position.z-=c.z;o.position.y-=b.min.y}
+function gray(o){o.traverse(x=>{if(x.isMesh||x.isSkinnedMesh){x.castShadow=x.receiveShadow=true;x.material=new THREE.MeshStandardMaterial({color:0xbfc4ca,roughness:.72})}})}
+function importedPose(){if(!model)return false;model.visible=true;if(mannequin)mannequin.visible=false;if(mixer&&clips.length){let clip=clips[Math.floor(Math.random()*clips.length)];mixer.stopAllAction();let a=mixer.clipAction(clip);a.reset().play();let tt=Math.random()*Math.max(.01,clip.duration);mixer.setTime(tt);a.paused=true;$("poseName").textContent=clip.name||"Mixamo Pose";$("poseInfo").textContent=`Mixamo ${tt.toFixed(2)}s`}return true}
+function randomCam(){let lens=[24,35,50,85][Math.floor(Math.random()*4)];$("lens").value=lens;cam.setFocalLength(lens);let a=Math.random()*Math.PI*2,d=4.4+Math.random()*2.3,y=.9+Math.random()*3;cam.position.set(Math.cos(a)*d,y,Math.sin(a)*d);ctl.target.set(0,1.4,0);ctl.update();$("cam").textContent=`${lens}mm / ${y>2.8?"俯瞰":y<1.25?"アオリ":"斜め"}`}
+function randomPose(){if(!importedPose())drawMannequin();randomCam()}
+$("random").onclick=randomPose;$("front").onclick=()=>{cam.position.set(0,1.65,6);ctl.target.set(0,1.4,0);ctl.update();$("cam").textContent=`${$("lens").value}mm / 正面`};$("resetCam").onclick=()=>{cam.position.set(4,2.6,6);ctl.target.set(0,1.4,0);ctl.update()};
+$("lens").onchange=e=>{cam.setFocalLength(+e.target.value);$("cam").textContent=`${e.target.value}mm / 手動`};$("grid").onchange=e=>grid.visible=e.target.checked;$("lighting").onchange=e=>{let v=e.target.value;if(v==="soft"){hemi.intensity=1.5;key.intensity=3.2;rim.intensity=1}else if(v==="hard"){hemi.intensity=.45;key.intensity=5;rim.intensity=.2}else{hemi.intensity=2.2;key.intensity=.8;rim.intensity=.1}};
+const DB="PoseTrainerDB";function openDB(){return new Promise((ok,no)=>{let q=indexedDB.open(DB,1);q.onupgradeneeded=()=>q.result.createObjectStore("a");q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}async function putFBX(buf,name){let d=await openDB();return new Promise((ok,no)=>{let t=d.transaction("a","readwrite");t.objectStore("a").put({buf,name},"fbx");t.oncomplete=ok;t.onerror=()=>no(t.error)})}async function getFBX(){let d=await openDB();return new Promise((ok,no)=>{let q=d.transaction("a").objectStore("a").get("fbx");q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}async function delFBX(){let d=await openDB();return new Promise(ok=>{let q=d.transaction("a","readwrite").objectStore("a").delete("fbx");q.onsuccess=ok})}
+const loader=new FBXLoader();async function loadFBX(buf,name){try{let url=URL.createObjectURL(new Blob([buf])),o=await loader.loadAsync(url);URL.revokeObjectURL(url);if(model)scene.remove(model);model=o;scene.add(model);gray(model);fit(model);clips=model.animations||[];mixer=clips.length?new THREE.AnimationMixer(model):null;$("modelStatus").innerHTML=`${name}<small>${clips.length} animation clip(s) / 保存済み</small>`;$("src").textContent="MIXAMO FBX";randomPose()}catch(e){console.error(e);alert("FBXを読み込めませんでした。Mixamoから書き出したFBXを試してください。")}}
+$("fbx").onchange=async e=>{let f=e.target.files?.[0];if(!f)return;let b=await f.arrayBuffer();await putFBX(b,f.name);await loadFBX(b,f.name)};$("clear").onclick=async()=>{await delFBX();if(model){scene.remove(model);model=null;mixer=null;clips=[]}$("modelStatus").innerHTML="内蔵3Dマネキン<small>保存モデルを削除しました。</small>";drawMannequin();randomCam()};
+const LK="poseTrainerLogV3",loadLog=()=>{try{return JSON.parse(localStorage.getItem(LK))||{}}catch{return{}}},saveLog=x=>localStorage.setItem(LK,JSON.stringify(x)),dk=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+function addLog(c=1,m=0){let l=loadLog(),k=dk(new Date());l[k]??={count:0,minutes:0};l[k].count+=c;l[k].minutes+=m;saveLog(l);today();renderStats()}
+function today(){let x=loadLog()[dk(new Date())]||{count:0,minutes:0};$("today").textContent=x.count;$("mins").textContent=Math.round(x.minutes);$("md").textContent=`${x.count}枚`}
+let dur=300,rem=300,id=null,run=false,last=0;const fmt=s=>`${String(Math.floor(s/60)).padStart(2,"0")}:${String(Math.max(0,Math.floor(s%60))).padStart(2,"0")}`;
+function tui(){$("timer").textContent=$("mt").textContent=fmt(rem);$("start").textContent=$("ms").textContent=run?"一時停止":"開始"}function stop(){if(id)clearInterval(id);id=null;run=false;tui()}function start(){if(run)return;run=true;last=Date.now();tui();id=setInterval(()=>{let n=Date.now(),d=Math.floor((n-last)/1000);if(d){rem-=d;last+=d*1000}if(rem<=0){rem=0;clearInterval(id);id=null;run=false;if($("autoCount").checked)addLog(1,dur/60);if($("autoNext").checked){randomPose();rem=dur;start()}else tui()}else tui()},250)}function toggle(){run?stop():start()}
+$("start").onclick=$("ms").onclick=toggle;$("reset").onclick=()=>{stop();rem=dur;tui()};document.querySelectorAll(".p").forEach(b=>b.onclick=()=>{document.querySelectorAll(".p").forEach(x=>x.classList.add("dark"));b.classList.remove("dark");stop();dur=rem=+b.dataset.s;tui()});$("add").onclick=()=>addLog(1,0);
+let cd=new Date(),yr=cd.getFullYear();function mi(y,m){let f=new Date(y,m,1),l=new Date(y,m+1,0);return{d:l.getDate(),o:(f.getDay()+6)%7}}function renderMonth(){let y=cd.getFullYear(),m=cd.getMonth(),l=loadLog(),r=$("month");r.innerHTML="";$("mTitle").textContent=`${y}年 ${m+1}月`;let I=mi(y,m);for(let i=0;i<I.o;i++){let x=document.createElement("div");x.className="day empty";r.append(x)}for(let d=1;d<=I.d;d++){let it=l[dk(new Date(y,m,d))],x=document.createElement("div");x.className="day"+(it?.count?" done":"");x.innerHTML=`<span class=dn>${d}</span>${it?.count?`<span class=dc>${it.count}枚</span>`:""}`;r.append(x)}}function renderYear(){let r=$("year"),l=loadLog();r.innerHTML="";$("yTitle").textContent=`${yr}年`;for(let m=0;m<12;m++){let w=document.createElement("div");w.className="ym";w.innerHTML=`<h4>${m+1}月</h4>`;let g=document.createElement("div");g.className="mini",I=mi(yr,m);for(let i=0;i<I.o;i++){let x=document.createElement("div");x.className="md empty";g.append(x)}for(let d=1;d<=I.d;d++){let it=l[dk(new Date(yr,m,d))],x=document.createElement("div");x.className="md"+(it?.count?" done":"");g.append(x)}w.append(g);r.append(w)}}
+function streak(){let l=loadLog(),ks=Object.keys(l).filter(k=>l[k].count).sort();if(!ks.length)return[0,0];let best=0,run=0,pr=null;for(let k of ks){let d=new Date(k+"T00:00:00");run=pr&&Math.round((d-pr)/864e5)==1?run+1:1;best=Math.max(best,run);pr=d}let s=new Set(ks),d=new Date(),cur=0;if(!s.has(dk(d)))d.setDate(d.getDate()-1);while(s.has(dk(d))){cur++;d.setDate(d.getDate()-1)}return[cur,best]}
+function summary(){let l=loadLog(),n=new Date(),days=0,c=0;for(let[k,v]of Object.entries(l)){let d=new Date(k+"T00:00:00");if(d.getFullYear()==n.getFullYear()&&d.getMonth()==n.getMonth()&&v.count){days++;c+=v.count}}let s=streak();$("mDays").textContent=days+"日";$("mCount").textContent=c+"枚";$("streak").textContent=s[0]+"日";$("best").textContent=s[1]+"日"}function renderStats(){renderMonth();renderYear();summary()}
+$("statsBtn").onclick=()=>{renderStats();$("dlg").showModal()};$("close").onclick=()=>$("dlg").close();$("monthTab").onclick=()=>{$("monthView").classList.remove("hidden");$("yearView").classList.add("hidden")};$("yearTab").onclick=()=>{$("yearView").classList.remove("hidden");$("monthView").classList.add("hidden")};$("pm").onclick=()=>{cd.setMonth(cd.getMonth()-1);renderMonth()};$("nm").onclick=()=>{cd.setMonth(cd.getMonth()+1);renderMonth()};$("py").onclick=()=>{yr--;renderYear()};$("ny").onclick=()=>{yr++;renderYear()};
+new ResizeObserver(()=>{let w=stage.clientWidth,h=stage.clientHeight;ren.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}).observe(stage);function loop(){requestAnimationFrame(loop);ctl.update();ren.render(scene,cam)}loop();
+drawMannequin();randomCam();today();tui();try{let s=await getFBX();if(s?.buf)await loadFBX(s.buf,s.name)}catch(e){console.warn(e)}
+</script>
+</body></html>
