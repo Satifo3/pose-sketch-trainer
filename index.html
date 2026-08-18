@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#101216">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Pose Sketch Trainer V4</title>
+<title>Drawing Labs</title>
 <style>
 :root{--bg:#101216;--p:#181b21;--p2:#20242c;--line:#303642;--tx:#f4f6f8;--mut:#9aa4b1;--green:#46a36f}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -25,11 +25,18 @@ h1{font-size:17px;margin:0;letter-spacing:.08em}.sub{font-size:10px;color:var(--
 dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx);border:1px solid var(--line);border-radius:17px;padding:14px}dialog::backdrop{background:#000a}.dh,.calnav{display:flex;justify-content:space-between;align-items:center}
 .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}.summary .stat strong{font-size:18px}.tabs{display:flex;gap:6px;margin:8px 0}.week,.month{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.week span{text-align:center;font-size:9px;color:var(--mut);padding:4px}.day{min-height:65px;background:#fff;color:#15171a;border-radius:8px;padding:5px;position:relative}.day.done{background:var(--green);color:#fff}.day.empty{opacity:0}.dn{font-size:10px;font-weight:900}.dc{position:absolute;right:5px;bottom:5px;font-size:8px;font-weight:900}.year{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.ym{border:1px solid var(--line);border-radius:8px;padding:6px}.ym h4{font-size:9px;margin:0 0 5px}.mini{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.md{aspect-ratio:1;background:#fff;border-radius:2px}.md.done{background:var(--green)}.md.empty{opacity:0}.hidden{display:none!important}
 @media(max-width:800px){header{padding:9px 10px}.sub{display:none}.mobile{position:sticky;top:env(safe-area-inset-top);z-index:10;display:grid;grid-template-columns:1fr 1fr 1.1fr;gap:5px;padding:6px 8px;background:#101216f0;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.mobile div{background:var(--p);border:1px solid var(--line);border-radius:9px;padding:5px 7px}.mobile span{display:block;font-size:7px;color:var(--mut)}.mobile strong{font-size:16px}.layout{grid-template-columns:1fr;padding:7px;gap:7px}.viewer{padding:7px}#stage{height:56dvh;min-height:390px}.side{gap:7px}.timer{font-size:40px}.summary{grid-template-columns:1fr 1fr}.year{grid-template-columns:1fr 1fr}dialog{width:100vw;height:100dvh;max-height:none;border-radius:0;margin:0;padding:calc(10px + env(safe-area-inset-top)) 8px calc(12px + env(safe-area-inset-bottom))}.day{min-height:50px}}
+
+.lens-filter{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:7px}
+.lens-choice{display:flex;align-items:center;gap:7px;min-height:40px;padding:7px 9px;background:var(--p2);border:1px solid var(--line);border-radius:9px;color:var(--tx);font-size:10px;font-weight:800}
+.lens-choice input{width:18px;height:18px;accent-color:#fff}
+.lens-choice.wide{grid-column:1/-1}
+.lens-note{font-size:9px;color:var(--mut);line-height:1.45;margin-top:6px}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
 <body>
-<header><div><h1>POSE SKETCH TRAINER V4.6</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
+<header><div><h1>Drawing Labs</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
 <div class="mobile"><div><span>TIME</span><strong id="mt">05:00</strong></div><div><span>TODAY</span><strong id="md">0枚</strong></div><button id="ms">開始</button></div>
 <main class="layout">
 <section class="card viewer">
@@ -78,14 +85,40 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
   <label class="check"><input id="autoCount" type="checkbox" checked>各セット完了ごとに1枚記録</label>
 </section>
 <section class="card"><span class="ey">TODAY</span><div class="stats"><div class="stat"><strong id="today">0</strong><span>DRAWINGS</span></div><div class="stat"><strong id="mins">0</strong><span>MINUTES</span></div></div><button id="add" class="dark" style="width:100%;margin-top:7px">+ 1枚</button></section>
-<section class="card"><span class="ey">CAMERA</span><div class="controls"><label>レンズ<select id="lens">
-<option value="24">広角 24mm</option>
-<option value="80" selected>標準 80mm</option>
-<option value="120">望遠 120mm</option>
-<option value="300">超望遠 300mm</option>
-<option value="fisheye">魚眼レンズ</option>
-</select></label><label>ライト<select id="lighting"><option value="soft">Soft Studio</option><option value="hard">Hard Shadow</option><option value="flat">Flat</option></select></label><label><input id="grid" type="checkbox" checked> 床グリッド</label></div></section>
-<section class="card"><span class="ey">3D MODEL IMPORT / SESSION TIMER</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
+<section class="card">
+  <span class="ey">CAMERA</span>
+  <div class="controls">
+    <label>現在のレンズ / 手動確認
+      <select id="lens">
+        <option value="24">広角 24mm</option>
+        <option value="80" selected>標準 80mm</option>
+        <option value="120">望遠 120mm</option>
+        <option value="300">超望遠 300mm</option>
+        <option value="fisheye">魚眼レンズ</option>
+      </select>
+    </label>
+
+    <label>次ポーズでランダム使用するレンズ</label>
+    <div class="lens-filter" id="lensFilter">
+      <label class="lens-choice"><input class="lens-check" type="checkbox" value="24" checked>24mm 広角</label>
+      <label class="lens-choice"><input class="lens-check" type="checkbox" value="80" checked>80mm 標準</label>
+      <label class="lens-choice"><input class="lens-check" type="checkbox" value="120" checked>120mm 望遠</label>
+      <label class="lens-choice"><input class="lens-check" type="checkbox" value="300" checked>300mm 超望遠</label>
+      <label class="lens-choice wide"><input class="lens-check" type="checkbox" value="fisheye" checked>魚眼レンズ</label>
+    </div>
+    <div class="lens-note" id="lensFilterNote">5種類すべてからランダム</div>
+
+    <label>ライト
+      <select id="lighting">
+        <option value="soft">Soft Studio</option>
+        <option value="hard">Hard Shadow</option>
+        <option value="flat">Flat</option>
+      </select>
+    </label>
+    <label><input id="grid" type="checkbox" checked> 床グリッド</label>
+  </div>
+</section>
+<section class="card"><span class="ey">3D MODEL IMPORT / LENS FILTER</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
 </aside></main>
 <dialog id="dlg"><div class="dh"><h2 style="margin:0">デッサン記録</h2><button id="close" class="dark">閉じる</button></div>
 <div class="summary"><div class="stat"><span>今月の練習日</span><strong id="mDays">0日</strong></div><div class="stat"><span>今月の枚数</span><strong id="mCount">0枚</strong></div><div class="stat"><span>現在の連続</span><strong id="streak">0日</strong></div><div class="stat"><span>最長連続</span><strong id="best">0日</strong></div></div>
@@ -246,7 +279,80 @@ function frameSubject(direction=null){
   const di=$("distanceInfo");
   if(di)di.textContent=`距離 ${dist.toFixed(1)} / 表示 ${Math.round(targetFill*100)}%`;
 }
-function randomCam(){let lens=["24","80","120","300","fisheye"][Math.floor(Math.random()*5)];$("lens").value=lens;applyLens(lens,false);let az=Math.random()*Math.PI*2,el=THREE.MathUtils.degToRad(THREE.MathUtils.randFloat(-18,62));let dir=new THREE.Vector3(Math.cos(el)*Math.cos(az),Math.sin(el),Math.cos(el)*Math.sin(az)).normalize();frameSubject(dir);$("cam").textContent=`${lens==="fisheye"?"魚眼":lens+"mm"} / ${el>.48?"俯瞰":el<-.08?"アオリ":"斜め"}`}
+const LENS_FILTER_KEY="poseTrainerLensFilterV47";
+const ALL_LENSES=["24","80","120","300","fisheye"];
+
+function selectedRandomLenses(){
+  const selected=[...document.querySelectorAll(".lens-check:checked")].map(x=>x.value).filter(v=>ALL_LENSES.includes(v));
+
+  // Safety: never allow an empty random pool.
+  if(!selected.length){
+    const fallback=document.querySelector('.lens-check[value="80"]') || document.querySelector(".lens-check");
+    if(fallback)fallback.checked=true;
+    return fallback?[fallback.value]:["80"];
+  }
+  return selected;
+}
+
+function updateLensFilterUI(){
+  const selected=selectedRandomLenses();
+  const note=$("lensFilterNote");
+
+  if(note){
+    if(selected.length===ALL_LENSES.length){
+      note.textContent="5種類すべてからランダム";
+    }else if(selected.length===1){
+      const names={"24":"24mm 広角","80":"80mm 標準","120":"120mm 望遠","300":"300mm 超望遠","fisheye":"魚眼"};
+      note.textContent=`固定：${names[selected[0]]}`;
+    }else{
+      note.textContent=`選択した ${selected.length} 種類からランダム`;
+    }
+  }
+
+  try{localStorage.setItem(LENS_FILTER_KEY,JSON.stringify(selected))}catch{}
+}
+
+function restoreLensFilter(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(LENS_FILTER_KEY)||"null");
+    if(Array.isArray(saved) && saved.length){
+      document.querySelectorAll(".lens-check").forEach(cb=>cb.checked=saved.includes(cb.value));
+    }
+  }catch{}
+  updateLensFilterUI();
+}
+
+document.querySelectorAll(".lens-check").forEach(cb=>{
+  cb.addEventListener("change",()=>{
+    const checked=[...document.querySelectorAll(".lens-check:checked")];
+
+    // If the player unchecks the final lens, immediately restore that checkbox.
+    if(!checked.length){
+      cb.checked=true;
+    }
+    updateLensFilterUI();
+  });
+});
+
+function randomCam(){
+  const pool=selectedRandomLenses();
+  const lens=pool[Math.floor(Math.random()*pool.length)] || "80";
+
+  $("lens").value=lens;
+  applyLens(lens,false);
+
+  const az=Math.random()*Math.PI*2;
+  const el=THREE.MathUtils.degToRad(THREE.MathUtils.randFloat(-18,62));
+  const dir=new THREE.Vector3(
+    Math.cos(el)*Math.cos(az),
+    Math.sin(el),
+    Math.cos(el)*Math.sin(az)
+  ).normalize();
+
+  frameSubject(dir);
+  $("cam").textContent=`${lens==="fisheye"?"魚眼":lens+"mm"} / ${el>.48?"俯瞰":el<-.08?"アオリ":"斜め"}`;
+}
+
 function randomPose(){
   try{
     if(!importedPose())drawMannequin();
@@ -471,8 +577,20 @@ async function completeInterval(){
       sessionStarted=false;
       tui();
 
-      // Give clear completion feedback without blocking Safari.
+      // Even a ×1 session should prepare a fresh pose for the next drawing.
+      // Yield first so Safari can visibly paint 00:00.
+      if($("autoNext").checked){
+        await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
+        try{
+          randomPose();
+        }catch(err){
+          console.error("Final pose change failed:",err);
+        }
+      }
+
+      // Timer stays finished; only the preview changes.
       $("sessionPlan").textContent=`セッション完了：${sessionQueue.length}枚 / 合計 ${fmt(sessionQueue.reduce((a,b)=>a+b,0))}`;
+      tui();
       return;
     }
 
