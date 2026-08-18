@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#101216">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Pose Sketch Trainer V3</title>
+<title>Pose Sketch Trainer V4</title>
 <style>
 :root{--bg:#101216;--p:#181b21;--p2:#20242c;--line:#303642;--tx:#f4f6f8;--mut:#9aa4b1;--green:#46a36f}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -29,7 +29,7 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
 <body>
-<header><div><h1>POSE SKETCH TRAINER</h1><div class="sub">3D FIGURE DRAWING / MIXAMO READY</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
+<header><div><h1>POSE SKETCH TRAINER</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
 <div class="mobile"><div><span>TIME</span><strong id="mt">05:00</strong></div><div><span>TODAY</span><strong id="md">0枚</strong></div><button id="ms">開始</button></div>
 <main class="layout">
 <section class="card viewer">
@@ -44,8 +44,14 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
  <label class="check"><input id="autoNext" type="checkbox" checked>終了時に次のポーズ</label><label class="check"><input id="autoCount" type="checkbox" checked>完了時に1枚記録</label>
 </section>
 <section class="card"><span class="ey">TODAY</span><div class="stats"><div class="stat"><strong id="today">0</strong><span>DRAWINGS</span></div><div class="stat"><strong id="mins">0</strong><span>MINUTES</span></div></div><button id="add" class="dark" style="width:100%;margin-top:7px">+ 1枚</button></section>
-<section class="card"><span class="ey">CAMERA</span><div class="controls"><label>レンズ<select id="lens"><option>24</option><option selected>35</option><option>50</option><option>85</option></select></label><label>ライト<select id="lighting"><option value="soft">Soft Studio</option><option value="hard">Hard Shadow</option><option value="flat">Flat</option></select></label><label><input id="grid" type="checkbox" checked> 床グリッド</label></div></section>
-<section class="card"><span class="ey">ADOBE MIXAMO</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>Mixamo FBXを読み込むと置き換わります。</small></div><label class="file" for="fbx">Mixamo FBXを読み込む</label><input id="fbx" type="file" accept=".fbx"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">キャラクター＋アニメーション入りFBXなら、アニメーション中のランダムな瞬間を静止ポーズにします。読み込んだFBXはこの端末のブラウザ内に保存します。</p></div></section>
+<section class="card"><span class="ey">CAMERA</span><div class="controls"><label>レンズ<select id="lens">
+<option value="24">広角 24mm</option>
+<option value="80" selected>標準 80mm</option>
+<option value="120">望遠 120mm</option>
+<option value="300">超望遠 300mm</option>
+<option value="fisheye">魚眼レンズ</option>
+</select></label><label>ライト<select id="lighting"><option value="soft">Soft Studio</option><option value="hard">Hard Shadow</option><option value="flat">Flat</option></select></label><label><input id="grid" type="checkbox" checked> 床グリッド</label></div></section>
+<section class="card"><span class="ey">3D MODEL IMPORT</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
 </aside></main>
 <dialog id="dlg"><div class="dh"><h2 style="margin:0">デッサン記録</h2><button id="close" class="dark">閉じる</button></div>
 <div class="summary"><div class="stat"><span>今月の練習日</span><strong id="mDays">0日</strong></div><div class="stat"><span>今月の枚数</span><strong id="mCount">0枚</strong></div><div class="stat"><span>現在の連続</span><strong id="streak">0日</strong></div><div class="stat"><span>最長連続</span><strong id="best">0日</strong></div></div>
@@ -57,12 +63,19 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 import * as THREE from "three";
 import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 import {FBXLoader} from "three/addons/loaders/FBXLoader.js";
+import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
+import {ColladaLoader} from "three/addons/loaders/ColladaLoader.js";
+import {EffectComposer} from "three/addons/postprocessing/EffectComposer.js";
+import {RenderPass} from "three/addons/postprocessing/RenderPass.js";
+import {ShaderPass} from "three/addons/postprocessing/ShaderPass.js";
 const $=x=>document.getElementById(x),stage=$("stage");
 const ren=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:"high-performance"});ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.outputColorSpace=THREE.SRGBColorSpace;stage.prepend(ren.domElement);
-const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.01,100);cam.position.set(4,2.6,6);cam.setFocalLength(35);
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.01,100);cam.position.set(4,2.6,6);cam.setFocalLength(80);
 const ctl=new OrbitControls(cam,ren.domElement);ctl.enableDamping=true;ctl.target.set(0,1.4,0);ctl.minDistance=2;ctl.maxDistance=12;ctl.maxPolarAngle=Math.PI*.95;
 const hemi=new THREE.HemisphereLight(0xffffff,0x26313d,1.5),key=new THREE.DirectionalLight(0xffffff,3.2),rim=new THREE.DirectionalLight(0xc8dcff,1);key.position.set(4,7,5);rim.position.set(-4,3,-4);key.castShadow=true;scene.add(hemi,key,rim);
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshStandardMaterial({color:0x181b21,roughness:1}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);const grid=new THREE.GridHelper(20,40,0x5b6675,0x323844);grid.position.y=.003;scene.add(grid);
+const fisheyeShader={uniforms:{tDiffuse:{value:null},strength:{value:0},aspect:{value:1}},vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,fragmentShader:`uniform sampler2D tDiffuse;uniform float strength;uniform float aspect;varying vec2 vUv;void main(){vec2 p=vUv-0.5;p.x*=aspect;float r2=dot(p,p);vec2 q=p*(1.0+strength*r2);q.x/=aspect;vec2 uv=q+0.5;if(uv.x<0.0||uv.x>1.0||uv.y<0.0||uv.y>1.0){gl_FragColor=vec4(0.02,0.02,0.025,1.0);}else{gl_FragColor=texture2D(tDiffuse,uv);}}`};
+const composer=new EffectComposer(ren);composer.addPass(new RenderPass(scene,cam));const fisheyePass=new ShaderPass(fisheyeShader);composer.addPass(fisheyePass);
 const mtl=new THREE.MeshStandardMaterial({color:0xbfc4ca,roughness:.72}),jmtl=new THREE.MeshStandardMaterial({color:0x9098a2,roughness:.75});
 let mannequin=null,model=null,mixer=null,clips=[];
 function cap(a,b,r,material=mtl){let v=new THREE.Vector3().subVectors(b,a),l=v.length(),o=new THREE.Mesh(new THREE.CapsuleGeometry(r,Math.max(.01,l-2*r),10,18),material);o.position.copy(a).add(b).multiplyScalar(.5);o.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.clone().normalize());o.castShadow=o.receiveShadow=true;return o}
@@ -79,13 +92,40 @@ function drawMannequin(){
 function fit(o){o.updateMatrixWorld(true);let b=new THREE.Box3().setFromObject(o),s=b.getSize(new THREE.Vector3());o.scale.setScalar(3/Math.max(s.y,.001));o.updateMatrixWorld(true);b.setFromObject(o);let c=b.getCenter(new THREE.Vector3());o.position.x-=c.x;o.position.z-=c.z;o.position.y-=b.min.y}
 function gray(o){o.traverse(x=>{if(x.isMesh||x.isSkinnedMesh){x.castShadow=x.receiveShadow=true;x.material=new THREE.MeshStandardMaterial({color:0xbfc4ca,roughness:.72})}})}
 function importedPose(){if(!model)return false;model.visible=true;if(mannequin)mannequin.visible=false;if(mixer&&clips.length){let clip=clips[Math.floor(Math.random()*clips.length)];mixer.stopAllAction();let a=mixer.clipAction(clip);a.reset().play();let tt=Math.random()*Math.max(.01,clip.duration);mixer.setTime(tt);a.paused=true;$("poseName").textContent=clip.name||"Mixamo Pose";$("poseInfo").textContent=`Mixamo ${tt.toFixed(2)}s`}return true}
-function randomCam(){let lens=[24,35,50,85][Math.floor(Math.random()*4)];$("lens").value=lens;cam.setFocalLength(lens);let a=Math.random()*Math.PI*2,d=4.4+Math.random()*2.3,y=.9+Math.random()*3;cam.position.set(Math.cos(a)*d,y,Math.sin(a)*d);ctl.target.set(0,1.4,0);ctl.update();$("cam").textContent=`${lens}mm / ${y>2.8?"俯瞰":y<1.25?"アオリ":"斜め"}`}
+function activeObject(){return model&&model.visible?model:mannequin}
+function activeBounds(){const o=activeObject();if(!o)return{center:new THREE.Vector3(0,1.4,0),radius:1.6};o.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(o);const sphere=box.getBoundingSphere(new THREE.Sphere());return{center:sphere.center,radius:Math.max(.35,sphere.radius)}}
+function applyLens(value,doFrame=true){
+  if(value==="fisheye"){
+    cam.fov=128;cam.updateProjectionMatrix();fisheyePass.uniforms.strength.value=.95;
+  }else{
+    fisheyePass.uniforms.strength.value=0;cam.fov=50;cam.updateProjectionMatrix();cam.setFocalLength(+value);
+  }
+  if(doFrame)frameSubject();
+}
+function frameSubject(direction=null){const b=activeBounds();ctl.target.copy(b.center);const vfov=THREE.MathUtils.degToRad(cam.fov);let dist=b.radius/Math.sin(Math.max(.02,vfov/2))*1.18;if($("lens").value==="fisheye")dist=Math.max(b.radius*1.35,1.5);let dir=direction||cam.position.clone().sub(ctl.target).normalize();if(!Number.isFinite(dir.lengthSq())||dir.lengthSq()<.1)dir=new THREE.Vector3(.6,.25,1).normalize();cam.position.copy(b.center).add(dir.multiplyScalar(dist));cam.near=Math.max(.01,dist-b.radius*2.2);cam.far=Math.max(100,dist+b.radius*8);cam.updateProjectionMatrix();ctl.update()}
+function randomCam(){let lens=["24","80","120","300","fisheye"][Math.floor(Math.random()*5)];$("lens").value=lens;applyLens(lens,false);let az=Math.random()*Math.PI*2,el=THREE.MathUtils.degToRad(THREE.MathUtils.randFloat(-18,62));let dir=new THREE.Vector3(Math.cos(el)*Math.cos(az),Math.sin(el),Math.cos(el)*Math.sin(az)).normalize();frameSubject(dir);$("cam").textContent=`${lens==="fisheye"?"魚眼":lens+"mm"} / ${el>.48?"俯瞰":el<-.08?"アオリ":"斜め"}`}
 function randomPose(){if(!importedPose())drawMannequin();randomCam()}
-$("random").onclick=randomPose;$("front").onclick=()=>{cam.position.set(0,1.65,6);ctl.target.set(0,1.4,0);ctl.update();$("cam").textContent=`${$("lens").value}mm / 正面`};$("resetCam").onclick=()=>{cam.position.set(4,2.6,6);ctl.target.set(0,1.4,0);ctl.update()};
-$("lens").onchange=e=>{cam.setFocalLength(+e.target.value);$("cam").textContent=`${e.target.value}mm / 手動`};$("grid").onchange=e=>grid.visible=e.target.checked;$("lighting").onchange=e=>{let v=e.target.value;if(v==="soft"){hemi.intensity=1.5;key.intensity=3.2;rim.intensity=1}else if(v==="hard"){hemi.intensity=.45;key.intensity=5;rim.intensity=.2}else{hemi.intensity=2.2;key.intensity=.8;rim.intensity=.1}};
-const DB="PoseTrainerDB";function openDB(){return new Promise((ok,no)=>{let q=indexedDB.open(DB,1);q.onupgradeneeded=()=>q.result.createObjectStore("a");q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}async function putFBX(buf,name){let d=await openDB();return new Promise((ok,no)=>{let t=d.transaction("a","readwrite");t.objectStore("a").put({buf,name},"fbx");t.oncomplete=ok;t.onerror=()=>no(t.error)})}async function getFBX(){let d=await openDB();return new Promise((ok,no)=>{let q=d.transaction("a").objectStore("a").get("fbx");q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}async function delFBX(){let d=await openDB();return new Promise(ok=>{let q=d.transaction("a","readwrite").objectStore("a").delete("fbx");q.onsuccess=ok})}
-const loader=new FBXLoader();async function loadFBX(buf,name){try{let url=URL.createObjectURL(new Blob([buf])),o=await loader.loadAsync(url);URL.revokeObjectURL(url);if(model)scene.remove(model);model=o;scene.add(model);gray(model);fit(model);clips=model.animations||[];mixer=clips.length?new THREE.AnimationMixer(model):null;$("modelStatus").innerHTML=`${name}<small>${clips.length} animation clip(s) / 保存済み</small>`;$("src").textContent="MIXAMO FBX";randomPose()}catch(e){console.error(e);alert("FBXを読み込めませんでした。Mixamoから書き出したFBXを試してください。")}}
-$("fbx").onchange=async e=>{let f=e.target.files?.[0];if(!f)return;let b=await f.arrayBuffer();await putFBX(b,f.name);await loadFBX(b,f.name)};$("clear").onclick=async()=>{await delFBX();if(model){scene.remove(model);model=null;mixer=null;clips=[]}$("modelStatus").innerHTML="内蔵3Dマネキン<small>保存モデルを削除しました。</small>";drawMannequin();randomCam()};
+$("random").onclick=randomPose;$("front").onclick=()=>{applyLens($("lens").value,false);frameSubject(new THREE.Vector3(0,.04,1));$("cam").textContent=`${$("lens").value==="fisheye"?"魚眼":$("lens").value+"mm"} / 正面`};$("resetCam").onclick=()=>{applyLens($("lens").value,false);frameSubject(new THREE.Vector3(.55,.25,.8).normalize())};
+$("lens").onchange=e=>{applyLens(e.target.value,true);$("cam").textContent=`${e.target.value==="fisheye"?"魚眼":e.target.value+"mm"} / 手動`};$("grid").onchange=e=>grid.visible=e.target.checked;$("lighting").onchange=e=>{let v=e.target.value;if(v==="soft"){hemi.intensity=1.5;key.intensity=3.2;rim.intensity=1}else if(v==="hard"){hemi.intensity=.45;key.intensity=5;rim.intensity=.2}else{hemi.intensity=2.2;key.intensity=.8;rim.intensity=.1}};
+const DB="PoseTrainerDBV4",STORE="assets";function openDB(){return new Promise((ok,no)=>{let q=indexedDB.open(DB,1);q.onupgradeneeded=()=>q.result.createObjectStore(STORE);q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}
+async function saveAssetSet(files){let d=await openDB(),items=[];for(const f of files)items.push({name:f.name,type:f.type,buf:await f.arrayBuffer()});return new Promise((ok,no)=>{let t=d.transaction(STORE,"readwrite");t.objectStore(STORE).put(items,"modelFiles");t.oncomplete=ok;t.onerror=()=>no(t.error)})}
+async function getAssetSet(){let d=await openDB();return new Promise((ok,no)=>{let q=d.transaction(STORE).objectStore(STORE).get("modelFiles");q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}
+async function clearAssets(){let d=await openDB();return new Promise(ok=>{let q=d.transaction(STORE,"readwrite").objectStore(STORE).delete("modelFiles");q.onsuccess=ok})}
+function disposeModel(){if(!model)return;scene.remove(model);model.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose?.())}});model=null;mixer=null;clips=[]}
+function setImported(root,animations,name,format){disposeModel();model=root;scene.add(model);gray(model);fit(model);clips=animations||[];mixer=clips.length?new THREE.AnimationMixer(model):null;$("modelStatus").innerHTML=`${name}<small>${format} / ${clips.length} animation clip(s) / 保存済み</small>`;$("src").textContent=`${format}`;randomPose()}
+async function loadAssetSet(items){
+  if(!items?.length)return;const files=new Map(items.map(x=>[x.name.toLowerCase(),x]));const main=items.find(x=>/\.(glb|gltf|fbx|dae)$/i.test(x.name));if(!main)throw new Error("3Dモデル本体が見つかりません");
+  const blobUrls=new Map();for(const it of items){const u=URL.createObjectURL(new Blob([it.buf],{type:it.type||"application/octet-stream"}));blobUrls.set(it.name.toLowerCase(),u);blobUrls.set(it.name.split('/').pop().toLowerCase(),u)}
+  const manager=new THREE.LoadingManager();manager.setURLModifier(url=>{const clean=decodeURIComponent(url).split('?')[0];const base=clean.split('/').pop().toLowerCase();return blobUrls.get(base)||blobUrls.get(clean.toLowerCase())||url});
+  try{
+    const ext=main.name.split('.').pop().toLowerCase();let url=blobUrls.get(main.name.toLowerCase());
+    if(ext==="fbx"){const o=await new FBXLoader(manager).loadAsync(url);setImported(o,o.animations||[],main.name,"FBX")}
+    else if(ext==="glb"||ext==="gltf"){const g=await new GLTFLoader(manager).loadAsync(url);setImported(g.scene,g.animations||[],main.name,ext.toUpperCase())}
+    else if(ext==="dae"){const c=await new ColladaLoader(manager).loadAsync(url);setImported(c.scene,c.animations||[],main.name,"DAE")}
+  }finally{setTimeout(()=>blobUrls.forEach(u=>URL.revokeObjectURL(u)),5000)}
+}
+$("modelFiles").onchange=async e=>{const files=[...(e.target.files||[])];if(!files.length)return;try{await saveAssetSet(files);const items=[];for(const f of files)items.push({name:f.name,type:f.type,buf:await f.arrayBuffer()});await loadAssetSet(items)}catch(err){console.error(err);alert("モデルを読み込めませんでした。FBX/GLB/GLTF/DAEを確認し、GLTFの場合は .bin やテクスチャも一緒に選択してください。")}};
+$("clear").onclick=async()=>{await clearAssets();disposeModel();$("modelStatus").innerHTML="内蔵3Dマネキン<small>保存モデルを削除しました。</small>";$("src").textContent="3D MANNEQUIN";drawMannequin();randomCam()};
 const LK="poseTrainerLogV3",loadLog=()=>{try{return JSON.parse(localStorage.getItem(LK))||{}}catch{return{}}},saveLog=x=>localStorage.setItem(LK,JSON.stringify(x)),dk=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 function addLog(c=1,m=0){let l=loadLog(),k=dk(new Date());l[k]??={count:0,minutes:0};l[k].count+=c;l[k].minutes+=m;saveLog(l);today();renderStats()}
 function today(){let x=loadLog()[dk(new Date())]||{count:0,minutes:0};$("today").textContent=x.count;$("mins").textContent=Math.round(x.minutes);$("md").textContent=`${x.count}枚`}
@@ -96,7 +136,7 @@ let cd=new Date(),yr=cd.getFullYear();function mi(y,m){let f=new Date(y,m,1),l=n
 function streak(){let l=loadLog(),ks=Object.keys(l).filter(k=>l[k].count).sort();if(!ks.length)return[0,0];let best=0,run=0,pr=null;for(let k of ks){let d=new Date(k+"T00:00:00");run=pr&&Math.round((d-pr)/864e5)==1?run+1:1;best=Math.max(best,run);pr=d}let s=new Set(ks),d=new Date(),cur=0;if(!s.has(dk(d)))d.setDate(d.getDate()-1);while(s.has(dk(d))){cur++;d.setDate(d.getDate()-1)}return[cur,best]}
 function summary(){let l=loadLog(),n=new Date(),days=0,c=0;for(let[k,v]of Object.entries(l)){let d=new Date(k+"T00:00:00");if(d.getFullYear()==n.getFullYear()&&d.getMonth()==n.getMonth()&&v.count){days++;c+=v.count}}let s=streak();$("mDays").textContent=days+"日";$("mCount").textContent=c+"枚";$("streak").textContent=s[0]+"日";$("best").textContent=s[1]+"日"}function renderStats(){renderMonth();renderYear();summary()}
 $("statsBtn").onclick=()=>{renderStats();$("dlg").showModal()};$("close").onclick=()=>$("dlg").close();$("monthTab").onclick=()=>{$("monthView").classList.remove("hidden");$("yearView").classList.add("hidden")};$("yearTab").onclick=()=>{$("yearView").classList.remove("hidden");$("monthView").classList.add("hidden")};$("pm").onclick=()=>{cd.setMonth(cd.getMonth()-1);renderMonth()};$("nm").onclick=()=>{cd.setMonth(cd.getMonth()+1);renderMonth()};$("py").onclick=()=>{yr--;renderYear()};$("ny").onclick=()=>{yr++;renderYear()};
-new ResizeObserver(()=>{let w=stage.clientWidth,h=stage.clientHeight;ren.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}).observe(stage);function loop(){requestAnimationFrame(loop);ctl.update();ren.render(scene,cam)}loop();
-drawMannequin();randomCam();today();tui();try{let s=await getFBX();if(s?.buf)await loadFBX(s.buf,s.name)}catch(e){console.warn(e)}
+new ResizeObserver(()=>{let w=stage.clientWidth,h=stage.clientHeight;ren.setSize(w,h,false);composer.setSize(w,h);fisheyePass.uniforms.aspect.value=w/Math.max(1,h);cam.aspect=w/h;cam.updateProjectionMatrix()}).observe(stage);function loop(){requestAnimationFrame(loop);ctl.update();composer.render()}loop();
+drawMannequin();$("lens").value="80";randomCam();today();tui();try{let s=await getAssetSet();if(s?.length)await loadAssetSet(s)}catch(e){console.warn(e)}
 </script>
 </body></html>
