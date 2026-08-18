@@ -29,7 +29,7 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}</script>
 </head>
 <body>
-<header><div><h1>POSE SKETCH TRAINER V4.5</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
+<header><div><h1>POSE SKETCH TRAINER V4.6</h1><div class="sub">3D FIGURE DRAWING / UNIVERSAL MODEL IMPORT V4</div></div><div style="display:flex;gap:5px"><span id="src" class="badge">3D MANNEQUIN</span><button id="statsBtn" class="dark">記録</button></div></header>
 <div class="mobile"><div><span>TIME</span><strong id="mt">05:00</strong></div><div><span>TODAY</span><strong id="md">0枚</strong></div><button id="ms">開始</button></div>
 <main class="layout">
 <section class="card viewer">
@@ -38,10 +38,44 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
  <div class="actions"><button id="front" class="dark">正面</button><button id="random">ランダム</button><button id="resetCam" class="dark">戻す</button></div>
 </section>
 <aside class="side">
-<section class="card"><span class="ey">TIMER</span><div id="timer" class="timer">05:00</div>
- <div class="presets"><button class="dark p" data-s="30">30秒</button><button class="dark p" data-s="60">1分</button><button class="dark p" data-s="120">2分</button><button class="p" data-s="300">5分</button><button class="dark p" data-s="600">10分</button></div>
- <div class="row"><button id="start">開始</button><button id="reset" class="dark">リセット</button></div>
- <label class="check"><input id="autoNext" type="checkbox" checked>終了時に次のポーズ</label><label class="check"><input id="autoCount" type="checkbox" checked>完了時に1枚記録</label>
+<section class="card">
+  <span class="ey">TIMER / SESSION</span>
+  <div id="timer" class="timer">05:00</div>
+
+  <div class="controls" style="margin-top:4px">
+    <label>タイマーモード
+      <select id="sessionMode">
+        <option value="single">×1セット</option>
+        <option value="five">×5セット</option>
+        <option value="ten">×10セット</option>
+        <option value="tenmin3">10分 ×3セット</option>
+        <option value="random20">ランダム20分</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="presets" id="durationPresets">
+    <button class="dark p" data-s="30">30秒</button>
+    <button class="dark p" data-s="60">1分</button>
+    <button class="dark p" data-s="120">2分</button>
+    <button class="p" data-s="300">5分</button>
+    <button class="dark p" data-s="600">10分</button>
+  </div>
+
+  <div class="row">
+    <button id="start">開始</button>
+    <button id="reset" class="dark">リセット</button>
+  </div>
+
+  <div class="stats" style="margin-top:8px">
+    <div class="stat"><strong id="setProgress">1 / 1</strong><span>SET</span></div>
+    <div class="stat"><strong id="sessionRemain">05:00</strong><span>SESSION LEFT</span></div>
+  </div>
+
+  <div id="sessionPlan" class="help" style="margin-top:8px">5分 ×1セット</div>
+
+  <label class="check"><input id="autoNext" type="checkbox" checked>各セット終了時に次のポーズへ</label>
+  <label class="check"><input id="autoCount" type="checkbox" checked>各セット完了ごとに1枚記録</label>
 </section>
 <section class="card"><span class="ey">TODAY</span><div class="stats"><div class="stat"><strong id="today">0</strong><span>DRAWINGS</span></div><div class="stat"><strong id="mins">0</strong><span>MINUTES</span></div></div><button id="add" class="dark" style="width:100%;margin-top:7px">+ 1枚</button></section>
 <section class="card"><span class="ey">CAMERA</span><div class="controls"><label>レンズ<select id="lens">
@@ -51,7 +85,7 @@ dialog{width:min(900px,96vw);max-height:92dvh;background:var(--p);color:var(--tx
 <option value="300">超望遠 300mm</option>
 <option value="fisheye">魚眼レンズ</option>
 </select></label><label>ライト<select id="lighting"><option value="soft">Soft Studio</option><option value="hard">Hard Shadow</option><option value="flat">Flat</option></select></label><label><input id="grid" type="checkbox" checked> 床グリッド</label></div></section>
-<section class="card"><span class="ey">3D MODEL IMPORT / STABLE TIMER</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
+<section class="card"><span class="ey">3D MODEL IMPORT / SESSION TIMER</span><div class="model"><div id="modelStatus" class="modelstatus">内蔵3Dマネキン<small>MakeHuman / Mixamo / Blenderなどの3Dモデルを読み込めます。</small></div><label class="file" for="modelFiles">3Dモデルを読み込む</label><input id="modelFiles" type="file" multiple accept=".fbx,.glb,.gltf,.dae,.bin,.png,.jpg,.jpeg,.webp"><button id="clear" class="dark" style="width:100%;margin-top:6px">保存モデルを削除</button><p class="help">対応: FBX / GLB / GLTF / DAE。リグ・アニメーション入りデータはアニメーションクリップを自動検出します。GLTFが .bin や画像に分かれている場合は関連ファイルもまとめて選択してください。MakeHumanはFBX/DAE書き出しが扱いやすいです。</p></div></section>
 </aside></main>
 <dialog id="dlg"><div class="dh"><h2 style="margin:0">デッサン記録</h2><button id="close" class="dark">閉じる</button></div>
 <div class="summary"><div class="stat"><span>今月の練習日</span><strong id="mDays">0日</strong></div><div class="stat"><span>今月の枚数</span><strong id="mCount">0枚</strong></div><div class="stat"><span>現在の連続</span><strong id="streak">0日</strong></div><div class="stat"><span>最長連続</span><strong id="best">0日</strong></div></div>
@@ -264,16 +298,32 @@ $("clear").onclick=async()=>{await clearAssets();disposeModel();$("modelStatus")
 const LK="poseTrainerLogV3",loadLog=()=>{try{return JSON.parse(localStorage.getItem(LK))||{}}catch{return{}}},saveLog=x=>localStorage.setItem(LK,JSON.stringify(x)),dk=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 function addLog(c=1,m=0){let l=loadLog(),k=dk(new Date());l[k]??={count:0,minutes:0};l[k].count+=c;l[k].minutes+=m;saveLog(l);today();renderStats()}
 function today(){let x=loadLog()[dk(new Date())]||{count:0,minutes:0};$("today").textContent=x.count;$("mins").textContent=Math.round(x.minutes);$("md").textContent=`${x.count}枚`}
+
 let dur=300,rem=300,id=null,run=false,deadline=0,finishing=false;
+
+// Session queue: each entry is one drawing interval in seconds.
+let sessionQueue=[300];
+let sessionIndex=0;
+let selectedDuration=300;
+let sessionStarted=false;
 
 const fmt=s=>{
   const safe=Math.max(0,Math.ceil(Number.isFinite(s)?s:0));
   return `${String(Math.floor(safe/60)).padStart(2,"0")}:${String(safe%60).padStart(2,"0")}`;
 };
 
+function sumQueueFrom(index=sessionIndex, currentRemaining=rem){
+  if(!sessionQueue.length)return 0;
+  let total=Math.max(0,currentRemaining);
+  for(let i=index+1;i<sessionQueue.length;i++)total+=sessionQueue[i];
+  return total;
+}
+
 function tui(){
   $("timer").textContent=$("mt").textContent=fmt(rem);
-  $("start").textContent=$("ms").textContent=run?"一時停止":"開始";
+  $("start").textContent=$("ms").textContent=run?"一時停止":(sessionStarted&&sessionIndex<sessionQueue.length?"再開":"開始");
+  $("setProgress").textContent=`${Math.min(sessionIndex+1,sessionQueue.length)} / ${sessionQueue.length}`;
+  $("sessionRemain").textContent=fmt(sumQueueFrom());
 }
 
 function clearTimerHandle(){
@@ -281,6 +331,88 @@ function clearTimerHandle(){
     clearTimeout(id);
     id=null;
   }
+}
+
+function buildRandom20Queue(){
+  // Must include 30s, 1m, 2m, 5m, 10m at least once and total exactly 20m.
+  // Base mandatory total = 18m30s. Remaining = 1m30s.
+  // The only exact combination from allowed values is +30s +60s.
+  const base=[30,60,120,300,600,30,60];
+  // Shuffle to make the order random every session.
+  for(let i=base.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [base[i],base[j]]=[base[j],base[i]];
+  }
+  return base;
+}
+
+function allowedDurationsForMode(mode){
+  if(mode==="single")return [30,60,120,300,600];
+  if(mode==="five")return [30,60,120,300];
+  if(mode==="ten")return [30,60,120];
+  if(mode==="tenmin3")return [600];
+  return [];
+}
+
+function buildSessionQueue(){
+  const mode=$("sessionMode").value;
+
+  if(mode==="random20"){
+    sessionQueue=buildRandom20Queue();
+  }else if(mode==="tenmin3"){
+    sessionQueue=[600,600,600];
+  }else{
+    const allowed=allowedDurationsForMode(mode);
+    if(!allowed.includes(selectedDuration))selectedDuration=allowed[0];
+    const count=mode==="single"?1:mode==="five"?5:10;
+    sessionQueue=Array(count).fill(selectedDuration);
+  }
+
+  sessionIndex=0;
+  dur=sessionQueue[0]||300;
+  rem=dur;
+  sessionStarted=false;
+  updateSessionPlan();
+  tui();
+}
+
+function updatePresetAvailability(){
+  const mode=$("sessionMode").value;
+  const allowed=allowedDurationsForMode(mode);
+
+  document.querySelectorAll(".p").forEach(b=>{
+    const seconds=+b.dataset.s;
+    const enabled=allowed.includes(seconds);
+    b.disabled=!enabled;
+    b.style.opacity=enabled?"1":".35";
+    b.style.pointerEvents=enabled?"auto":"none";
+    b.classList.add("dark");
+    if(enabled && seconds===selectedDuration)b.classList.remove("dark");
+  });
+
+  if(mode==="random20" || mode==="tenmin3"){
+    document.querySelectorAll(".p").forEach(b=>{
+      b.disabled=true;
+      b.style.opacity=".35";
+      b.style.pointerEvents="none";
+    });
+  }
+}
+
+function updateSessionPlan(){
+  const mode=$("sessionMode").value;
+  let text="";
+
+  if(mode==="random20"){
+    text="ランダム20分：30秒 / 1分 / 2分 / 5分 / 10分を最低1回ずつ使用";
+  }else if(mode==="tenmin3"){
+    text="10分 ×3セット（合計30分）";
+  }else{
+    const count=mode==="single"?1:mode==="five"?5:10;
+    text=`${fmt(selectedDuration).replace(/^00:/,"")} ×${count}セット`;
+  }
+
+  $("sessionPlan").textContent=text;
 }
 
 function stop(){
@@ -296,7 +428,6 @@ function stop(){
 function scheduleTick(){
   clearTimerHandle();
   if(!run)return;
-
   id=setTimeout(timerTick,100);
 }
 
@@ -307,8 +438,6 @@ function timerTick(){
 
   if(rem<=0){
     rem=0;
-
-    // Update the screen to 00:00 BEFORE any model/animation work.
     tui();
 
     run=false;
@@ -327,40 +456,79 @@ async function completeInterval(){
   finishing=true;
 
   try{
+    // Every completed interval counts as one drawing.
     if($("autoCount").checked){
       try{addLog(1,dur/60)}
       catch(err){console.warn("Log update failed:",err)}
     }
 
-    if($("autoNext").checked){
-      // Yield one frame so Safari paints 00:00 before heavy GLB animation work.
-      await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
+    const finishedIndex=sessionIndex;
+    const hasNext=finishedIndex+1<sessionQueue.length;
 
-      try{
-        randomPose();
-      }catch(err){
-        console.error("Automatic next pose failed:",err);
-      }
-
-      rem=dur;
-      tui();
-
-      // A pose-generation failure must never prevent the next timer.
-      start();
-    }else{
+    if(!hasNext){
+      sessionIndex=sessionQueue.length-1;
       rem=0;
+      sessionStarted=false;
       tui();
+
+      // Give clear completion feedback without blocking Safari.
+      $("sessionPlan").textContent=`セッション完了：${sessionQueue.length}枚 / 合計 ${fmt(sessionQueue.reduce((a,b)=>a+b,0))}`;
+      return;
+    }
+
+    // Move to next set first.
+    sessionIndex++;
+    dur=sessionQueue[sessionIndex];
+    rem=dur;
+
+    // Paint next set information before doing 3D work.
+    tui();
+    await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
+
+    if($("autoNext").checked){
+      try{randomPose()}
+      catch(err){console.error("Automatic next pose failed:",err)}
+    }
+
+    // Always auto-start the next set.
+    // No additional tap is required.
+    await new Promise(resolve=>setTimeout(resolve,80));
+    finishing=false;
+    start(true);
+    return;
+  }catch(err){
+    console.error("Session interval transition failed:",err);
+
+    // Even if pose/log UI fails, continue the session when possible.
+    if(sessionIndex+1<sessionQueue.length){
+      sessionIndex++;
+      dur=sessionQueue[sessionIndex];
+      rem=dur;
+      finishing=false;
+      start(true);
+      return;
     }
   }finally{
     finishing=false;
   }
 }
 
-function start(){
+function start(autoTransition=false){
   if(run || finishing)return;
 
-  if(!Number.isFinite(rem) || rem<=0)rem=dur;
+  if(!sessionStarted && !autoTransition){
+    // A fresh press of Start begins from set 1 with a freshly generated queue.
+    if(rem<=0 || sessionIndex>=sessionQueue.length){
+      buildSessionQueue();
+    }
+    sessionStarted=true;
+  }
 
+  if(!Number.isFinite(rem) || rem<=0){
+    rem=sessionQueue[sessionIndex]||selectedDuration;
+  }
+
+  dur=sessionQueue[sessionIndex]||selectedDuration;
   run=true;
   deadline=Date.now()+rem*1000;
   tui();
@@ -368,33 +536,66 @@ function start(){
 }
 
 function toggle(){
-  run?stop():start();
+  if(run){
+    stop();
+  }else{
+    start(false);
+  }
 }
+
 $("start").onclick=$("ms").onclick=toggle;
+
 $("reset").onclick=()=>{
   clearTimerHandle();
   run=false;
   deadline=0;
   finishing=false;
-  rem=dur;
-  tui();
+  sessionStarted=false;
+  buildSessionQueue();
 };
-document.querySelectorAll(".p").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll(".p").forEach(x=>x.classList.add("dark"));
-  b.classList.remove("dark");
+
+$("sessionMode").onchange=()=>{
   clearTimerHandle();
   run=false;
   deadline=0;
   finishing=false;
-  dur=+b.dataset.s;
-  rem=dur;
-  tui();
+  sessionStarted=false;
+
+  const allowed=allowedDurationsForMode($("sessionMode").value);
+  if(allowed.length && !allowed.includes(selectedDuration)){
+    selectedDuration=allowed[0];
+  }
+
+  updatePresetAvailability();
+  buildSessionQueue();
+};
+
+document.querySelectorAll(".p").forEach(b=>b.onclick=()=>{
+  if(b.disabled)return;
+
+  selectedDuration=+b.dataset.s;
+
+  document.querySelectorAll(".p").forEach(x=>x.classList.add("dark"));
+  b.classList.remove("dark");
+
+  clearTimerHandle();
+  run=false;
+  deadline=0;
+  finishing=false;
+  sessionStarted=false;
+
+  buildSessionQueue();
 });
+
 $("add").onclick=()=>addLog(1,0);
+
+updatePresetAvailability();
+buildSessionQueue();
 
 document.addEventListener("visibilitychange",()=>{
   if(!document.hidden && run && deadline){
     rem=Math.max(0,(deadline-Date.now())/1000);
+
     if(rem<=0){
       rem=0;
       tui();
